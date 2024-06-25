@@ -6,7 +6,6 @@ interface IProps {
 }
 
 export const LessonSlider = ({ data, handleDetail }: IProps) => {
-  console.log(data);
   return (
     <div className='mt-5 pb-1 overflow-x-scroll whitespace-nowrap scrollbar-hide'>
       {data?.map((myLesson) => (

@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { LessonSlider } from '../../components/organisms/LessonSlider';
 import { ApiClient } from '../../apis/apiClient';
 import { useQuery } from '@tanstack/react-query';
+import { NotFindMyLesson } from '../../components/molecules/NotFindMyLesson';
 
 const MyPage = () => {
   const username = '오감자';
@@ -30,7 +31,10 @@ const MyPage = () => {
       <p className='font-hanaBold text-xl'>마이페이지</p>
       <UserInfo username={username} hanaMoney={hanaMoney} />
       <div className='flex justify-between mt-5'>
-        <div className='w-[164px] h-[156px] bg-white rounded-2xl shadow-md cursor-pointer'>
+        <div
+          className='w-[164px] h-[156px] bg-white rounded-2xl shadow-md cursor-pointer'
+          onClick={() => navigate('')}
+        >
           <p className='font-hanaMedium text-base mt-6 ml-5'>
             신청 클래스 일정
           </p>
@@ -40,7 +44,10 @@ const MyPage = () => {
             className='w-[110px] h-[110px] ml-14'
           />
         </div>
-        <div className='w-[164px] h-[156px] bg-white rounded-2xl shadow-md cursor-pointer'>
+        <div
+          className='w-[164px] h-[156px] bg-white rounded-2xl shadow-md cursor-pointer'
+          onClick={() => navigate('')}
+        >
           <img
             src='../images/mypage/pencil.png'
             alt='calendar'
@@ -58,7 +65,11 @@ const MyPage = () => {
           onClick={handleNavigate}
         />
       </div>
-      <LessonSlider data={myLessons} handleDetail={handleDetail} />
+      {myLessons && myLessons.length > 0 ? (
+        <LessonSlider data={myLessons} handleDetail={handleDetail} />
+      ) : (
+        <NotFindMyLesson />
+      )}
     </div>
   );
 };
