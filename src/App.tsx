@@ -1,6 +1,7 @@
 import { Outlet } from 'react-router-dom';
 import './App.css';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import Keypad from './components/common/Keypad';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -15,6 +16,7 @@ function App() {
     <>
       <QueryClientProvider client={queryClient}>
         <Outlet />
+        <Keypad />
       </QueryClientProvider>
     </>
   );
