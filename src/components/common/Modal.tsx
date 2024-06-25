@@ -15,7 +15,7 @@ const Modal = () => {
   };
 
   return (
-    <div className='fixed w-96 h-screen bg-black bg-opacity-50 z-40 flex justify-center items-center'>
+    <div className='fixed w-full h-screen bg-black bg-opacity-50 z-40 flex justify-center items-center'>
       <div className='flex flex-col justify-center bg-white rounded-xl w-3/4 h-40 gap-3 z-50'>
         {modalTitle && (
           <p className='text-hanaGreen font-hanaBold text-center text-base'>
