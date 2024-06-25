@@ -7,6 +7,7 @@ import { Home } from './pages/main/Home.tsx';
 import { ModalProvider } from './context/ModalContext.tsx';
 import Modal from './components/common/Modal.tsx';
 import { Navbar } from './components/common/Navbar.tsx';
+import { HanaMain } from './pages/main/HanaMain.tsx';
 
 const router = createBrowserRouter([
   {
@@ -14,6 +15,7 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       { index: true, element: <Home /> },
+      { path: '/main', element: <HanaMain /> },
       {
         element: <Navbar />,
         children: [{ path: '/', element: <Home /> }],
