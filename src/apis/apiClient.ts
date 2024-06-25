@@ -28,11 +28,11 @@ export class ApiClient {
   //   return response.data;
   // }
 
-  public static async getMyLesson(): Promise<MyLessonType[]> {
+  public static async getMyLesson(): Promise<MyLessonType> {
     const apiUrl = '/data/myLesson.json';
     const response = await fetch(apiUrl);
     const data = await response.json();
-    return data.myLessons;
+    return data;
   }
 
   //---------users---------

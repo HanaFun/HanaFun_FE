@@ -8,28 +8,27 @@ import { NotFindMyLesson } from '../../components/molecules/NotFindMyLesson';
 
 const MyPage = () => {
   const username = '오감자';
-  const hanaMoney = 1000;
   const navigate = useNavigate();
 
   const handleNavigate = () => {
     navigate('/myLessonList');
   };
-  const handleDetail = () => {
-    navigate(``); // LessonID가 포함된 Url
-  };
 
-  // lessonDetail data 가져오기
+  // data 가져오기
   const { data: myLessons } = useQuery({
     queryKey: ['myLessons'],
     queryFn: async () => {
-      return await ApiClient.getMyLesson();
+      const response = await ApiClient.getMyLesson();
+      return response;
     },
   });
+  const lessons = myLessons?.lessons;
+  const point = myLessons?.point;
 
   return (
     <div className='pt-6 px-5 pb-7'>
       <p className='font-hanaBold text-xl'>마이페이지</p>
-      <UserInfo username={username} hanaMoney={hanaMoney} />
+      <UserInfo username={username} hanaMoney={point} />
       <div className='flex justify-between mt-5'>
         <div
           className='w-[164px] h-[156px] bg-white rounded-2xl shadow-md cursor-pointer'
@@ -65,8 +64,8 @@ const MyPage = () => {
           onClick={handleNavigate}
         />
       </div>
-      {myLessons && myLessons.length > 0 ? (
-        <LessonSlider data={myLessons} handleDetail={handleDetail} />
+      {lessons && lessons.length > 0 ? (
+        <LessonSlider data={lessons} />
       ) : (
         <NotFindMyLesson />
       )}

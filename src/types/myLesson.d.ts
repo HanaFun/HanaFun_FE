@@ -1,4 +1,4 @@
-interface MyLessonType {
+interface LessonType {
   reservation_id: number;
   lessondate_id: number;
   lesson_id: number;
@@ -6,4 +6,9 @@ interface MyLessonType {
   title: string;
   location: string;
   date: string;
+}
+
+interface MyLessonType extends LessonType {
+  point: number;
+  lessons: LessonType[];
 }

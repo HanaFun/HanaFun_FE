@@ -1,6 +1,6 @@
 interface IProps {
   username: string;
-  hanaMoney: number;
+  hanaMoney?: number;
 }
 
 export const UserInfo = ({ username, hanaMoney }: IProps) => {

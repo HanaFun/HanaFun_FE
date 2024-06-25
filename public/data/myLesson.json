@@ -1,5 +1,6 @@
 {
-  "myLessons": [
+  "point": 1000,
+  "lessons": [
     {
       "reservation_id": 1,
       "lessondate_id": 1,
