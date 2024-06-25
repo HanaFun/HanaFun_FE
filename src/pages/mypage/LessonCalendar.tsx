@@ -6,6 +6,7 @@ import Calendar from 'react-calendar';
 import moment from 'moment';
 
 export const LessonCalendar = () => {
+  //캘린더에서 년, 월을 변수에 담아줘야 함
   const navigate = useNavigate();
   const [value, onChange] = useState(new Date());
   const handleDateChange = () => {};
