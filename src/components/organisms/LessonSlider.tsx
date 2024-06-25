@@ -8,7 +8,7 @@ export const LessonSlider = ({ handleDetail }: IProps) => {
   return (
     <div className='mt-5'>
       <LessonCard
-        image='../images/mypage/sample_classcard.png'
+        image='../images/mypage/sample_lessoncard.png'
         title='클래스명'
         category='베이킹'
         date='2024-06-25'
