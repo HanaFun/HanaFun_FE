@@ -2,6 +2,8 @@ import { GrFormNext } from 'react-icons/gr';
 import { UserInfo } from '../../components/molecules/UserInfo';
 import { useNavigate } from 'react-router-dom';
 import { LessonSlider } from '../../components/organisms/LessonSlider';
+import { ApiClient } from '../../apis/apiClient';
+import { useQuery } from '@tanstack/react-query';
 
 const MyPage = () => {
   const username = '오감자';
@@ -12,8 +14,16 @@ const MyPage = () => {
     navigate('/myLessonList');
   };
   const handleDetail = () => {
-    navigate(``); // classID가 포함된 Url
+    navigate(``); // LessonID가 포함된 Url
   };
+
+  // lessonDetail data 가져오기
+  const { data: myLessons } = useQuery({
+    queryKey: ['myLessons'],
+    queryFn: async () => {
+      return await ApiClient.getMyLesson();
+    },
+  });
 
   return (
     <div className='pt-6 px-5 pb-7'>
@@ -48,7 +58,7 @@ const MyPage = () => {
           onClick={handleNavigate}
         />
       </div>
-      <LessonSlider handleDetail={handleDetail} />
+      <LessonSlider data={myLessons} handleDetail={handleDetail} />
     </div>
   );
 };
