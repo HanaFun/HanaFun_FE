@@ -1,7 +1,7 @@
 import { GrFormNext } from 'react-icons/gr';
 import { UserInfo } from '../../components/molecules/UserInfo';
 import { useNavigate } from 'react-router-dom';
-import { ClassSlider } from '../../components/organisms/ClassSlider';
+import { LessonSlider } from '../../components/organisms/LessonSlider';
 
 const MyPage = () => {
   const username = '오감자';
@@ -9,7 +9,7 @@ const MyPage = () => {
   const navigate = useNavigate();
 
   const handleNavigate = () => {
-    navigate('/myClassList');
+    navigate('/myLessonList');
   };
   const handleDetail = () => {
     navigate(``); // classID가 포함된 Url
@@ -48,7 +48,7 @@ const MyPage = () => {
           onClick={handleNavigate}
         />
       </div>
-      <ClassSlider handleDetail={handleDetail} />
+      <LessonSlider handleDetail={handleDetail} />
     </div>
   );
 };

@@ -6,7 +6,7 @@ interface IProps {
   handleClick: () => void;
 }
 
-export const ClassCard = ({
+export const LessonCard = ({
   image,
   title,
   category,

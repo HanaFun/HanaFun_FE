@@ -1,13 +1,13 @@
-import { ClassCard } from '../molecules/ClassCard';
+import { LessonCard } from '../molecules/LessonCard';
 
 interface IProps {
   handleDetail: () => void;
 }
 
-export const ClassSlider = ({ handleDetail }: IProps) => {
+export const LessonSlider = ({ handleDetail }: IProps) => {
   return (
     <div className='mt-5'>
-      <ClassCard
+      <LessonCard
         image='../images/mypage/sample_classcard.png'
         title='클래스명'
         category='베이킹'
