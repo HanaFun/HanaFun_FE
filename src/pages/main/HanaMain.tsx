@@ -145,7 +145,7 @@ export const HanaMain = () => {
             </div>
           </div>
           <p className='font-hanaBold text-2xl mt-5'>
-            {data.balance.toLocaleString()}
+            {Math.floor(Math.random() * 999999 + 1).toLocaleString()}
             <span className='font-hanaMedium ml-1'>원</span>
           </p>
         </div>
