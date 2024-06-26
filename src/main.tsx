@@ -11,6 +11,7 @@ import MyPage from './pages/mypage/MyPage.tsx';
 import { HanaMain } from './pages/main/HanaMain.tsx';
 import { Login } from './pages/auth/Login.tsx';
 import { LessonCalendar } from './pages/mypage/LessonCalendar.tsx';
+import { MyLessonList } from './pages/mypage/MyLessonList.tsx';
 
 const router = createBrowserRouter([
   {
@@ -26,6 +27,7 @@ const router = createBrowserRouter([
           { path: '/', element: <Home /> },
           { path: '/mypage', element: <MyPage /> },
           { path: '/lessonCalendar', element: <LessonCalendar /> },
+          { path: '/myLessonList', element: <MyLessonList /> },
         ],
       },
     ],
