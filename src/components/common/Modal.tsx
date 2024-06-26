@@ -15,8 +15,8 @@ const Modal = () => {
   };
 
   return (
-    <div className='fixed w-full h-screen bg-black bg-opacity-50 z-40 flex justify-center items-center'>
-      <div className='flex flex-col justify-center bg-white rounded-xl w-3/4 h-40 gap-3 z-50'>
+    <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-40'>
+      <div className='flex flex-col justify-center bg-white rounded-xl w-[277px] h-40 gap-3 z-50'>
         {modalTitle && (
           <p className='text-hanaGreen font-hanaBold text-center text-base'>
             {modalTitle}
@@ -28,7 +28,9 @@ const Modal = () => {
             onClick={closeModal}
           />
         </div>
-        <p className='font-hanaMedium text-center text-lg'>{modalMessage}</p>
+        <p className='font-hanaMedium text-center text-lg mt-2'>
+          {modalMessage}
+        </p>
         <div className='flex justify-center gap-4'>
           <button
             type='button'

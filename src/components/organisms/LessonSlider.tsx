@@ -3,6 +3,7 @@ import { LessonCard } from '../molecules/LessonCard';
 import DropdownSingle from '../common/DropdownSingle';
 import DropdownDouble from '../common/DropdownDouble';
 import { useNavigate } from 'react-router-dom';
+import { useModal } from '../../context/ModalContext';
 
 interface IProps {
   data: Array<LessonType> | undefined;
@@ -12,6 +13,7 @@ interface IProps {
 
 export const LessonSlider = ({ data, show, option }: IProps) => {
   const navigate = useNavigate();
+  const { openModal } = useModal();
   const [activeCard, setActiveCard] = useState<number | null>(null);
 
   const handleModalOpen = (index: number) => {
@@ -19,8 +21,16 @@ export const LessonSlider = ({ data, show, option }: IProps) => {
   };
 
   const handleDelete = (reservation_id: number) => {
-    // 모달 열고, 확인 버튼 누르면 reservation_id 넘겨주기
-    console.log(reservation_id);
+    const handleConfirm = (reservation_id: number) => {
+      // reservation_id 값으로 예약 취소 api 요청
+      console.log(reservation_id);
+      openModal('예약이 취소되었습니다', '', () => navigate('/my-lesson-list'));
+    };
+
+    // 모달 열고, 확인 버튼 누르면 reservation_id 보내주기
+    openModal('예약을 취소하시겠습니까?', '', () =>
+      handleConfirm(reservation_id)
+    );
   };
 
   useEffect(() => {
