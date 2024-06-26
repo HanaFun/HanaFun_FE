@@ -1,22 +1,23 @@
 import { GrFormNext } from 'react-icons/gr';
+import { useNavigate } from 'react-router-dom';
 
-interface IProps {
-  data: [];
-}
+export const HostLessonInfo = ({
+  lesson_id,
+  image,
+  title,
+}: HostLessonInfoType) => {
+  const navigate = useNavigate();
 
-export const HostLessonInfo = ({ data }: IProps) => {
-  const lessonName = '클래스1';
   return (
-    <div className=' w-[351px] h-[70px] bg-white shadow-md rounded-2xl mt-4 p-3 flex justify-between items-center font-hanaRegular text-xl cursor-pointer'>
+    <div
+      className=' w-[351px] h-[70px] bg-white shadow-md rounded-2xl mt-3 p-3 flex justify-between items-center font-hanaRegular text-xl cursor-pointer'
+      onClick={() => navigate(`/host/lesson-detail/${lesson_id}`)}
+    >
       <div className='flex flex-row items-center'>
-        <img
-          src='/images/mypage/sample_lessoncard.png'
-          alt=''
-          className='w-11 h-11 rounded-lg mr-7'
-        />
-        <p>{lessonName}</p>
+        <img src={image} alt='' className='w-11 h-11 rounded-lg mr-7' />
+        <p>{title}</p>
       </div>
-      <GrFormNext />
+      <GrFormNext className='text-hanaSilver' />
     </div>
   );
 };
