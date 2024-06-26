@@ -22,8 +22,6 @@ export const LessonCalendar = () => {
     },
   });
 
-  console.log(selectedLesson);
-
   const handleClassDetail = async (lesson_id: number) => {
     const { data: lessonDetail } = useQuery({
       queryKey: ['lessonDetails'],
