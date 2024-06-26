@@ -10,8 +10,10 @@ import {
 import { PopularLessonItem } from '../../components/molecules/PopularLessonItem';
 import { AccountPwKeypad } from '../../components/organisms/AccountPwKeypad';
 import { Slide } from '../../components/organisms/Slide';
+import { QR } from '../../components/molecules/QR';
 
 const userDummyData = {
+  userId: 1,
   name: '오감자',
   accounts: [
     {
@@ -61,10 +63,28 @@ const bestLessonDummyData = [
 export const HanaFunMain = () => {
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
   const [showKeypad, setShowKeypad] = useState<boolean>(false);
+  const [showQr, setShowQr] = useState<boolean>(false);
+
+  const [selectedAccount, setSelectedAccount] = useState<{
+    accountId: number;
+    accountNumber: string;
+  }>({
+    accountId: -1,
+    accountNumber: '',
+  });
 
   const sendAccountPassword = (password: string) => {
     console.log('비밀번호>>', password);
     console.log('로그인');
+    setShowQr(true);
+  };
+
+  const clickedAccount = (accountId: number, accountNumber: string) => {
+    setShowDropdown((showDropdown) => !showDropdown);
+    setSelectedAccount({
+      accountId,
+      accountNumber,
+    });
   };
 
   return (
@@ -76,6 +96,14 @@ export const HanaFunMain = () => {
             setShowKeypad(false);
             setShowDropdown(false);
           }}
+        />
+      )}
+      {showQr && (
+        <QR
+          userId={userDummyData.userId}
+          accountId={selectedAccount.accountId}
+          accountNumber={selectedAccount.accountNumber}
+          onClose={() => setShowQr(false)}
         />
       )}
       <div className='pt-5 px-5'>
@@ -96,7 +124,7 @@ export const HanaFunMain = () => {
             {userDummyData.accounts.map((account) => (
               <div
                 key={account.accountId}
-                className='bg-white rounded-2xl py-5 px-7 font-hanaBold'
+                className='relative w-full bg-white rounded-2xl py-5 px-7 font-hanaBold'
               >
                 <div className='flex items-center justify-between'>
                   <span className='text-black text-lg'>
@@ -106,10 +134,12 @@ export const HanaFunMain = () => {
                     color='#B5B5B5'
                     size={16}
                     className='rotate-90 cursor-pointer'
-                    onClick={() => setShowDropdown((prev) => !prev)}
+                    onClick={() =>
+                      clickedAccount(account.accountId, account.accountNumber)
+                    }
                   />
                   {showDropdown && (
-                    <div className='absolute right-0 mr-16'>
+                    <div className='absolute right-0 mr-11'>
                       <DropdownSingle
                         image='images/qr.svg'
                         text='QR생성'

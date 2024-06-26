@@ -10,6 +10,7 @@ import { Navbar } from './components/common/Navbar.tsx';
 import { HanaMain } from './pages/main/HanaMain.tsx';
 import { Login } from './pages/auth/Login.tsx';
 import { HanaFunMain } from './pages/main/HanaFunMain.tsx';
+import { QRPay } from './pages/main/QRPay.tsx';
 
 const router = createBrowserRouter([
   {
@@ -18,6 +19,7 @@ const router = createBrowserRouter([
     children: [
       { path: '/main', element: <HanaMain /> },
       { path: '/login', element: <Login /> },
+      { path: '/qr-pay', element: <QRPay /> },
       {
         element: <Navbar />,
         children: [{ index: true, element: <HanaFunMain /> }],
