@@ -44,6 +44,19 @@ export class ApiClient {
     return data;
   }
 
+  // 임의 데이터. 클래스 상세 정보 호출
+  public static async getLessonDetail(
+    lesson_id: number
+  ): Promise<LessonDetailType> {
+    const apiUrl = '/data/lessonDetail.json';
+    const response = await fetch(apiUrl);
+    const data = await response.json();
+    const lesssonDetail = data.find(
+      (lesson: LessonDetailType) => lesson.lesson_id === lesson_id
+    );
+    return lesssonDetail;
+  }
+
   //---------users---------
   // async postLogin(user: LoginReqType) {
   //   const response = await this.axiosInstance.request<LoginType>({
