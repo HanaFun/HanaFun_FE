@@ -15,19 +15,17 @@ const Modal = () => {
   };
 
   return (
-    <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-40'>
-      <div className='flex flex-col justify-center bg-white rounded-xl w-[277px] h-40 gap-3 z-50'>
+    <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50'>
+      <div className='flex flex-col justify-center bg-white rounded-xl w-[277px] h-40 gap-3 z-60'>
         {modalTitle && (
           <p className='text-hanaGreen font-hanaBold text-center text-base'>
             {modalTitle}
           </p>
         )}
-        <div className='fixed w-96 h-screen z-40 flex justify-center items-center mb-28 ml-[70px]'>
-          <AiOutlineClose
-            className='text-hanaSilver cursor-pointer'
-            onClick={closeModal}
-          />
-        </div>
+        <AiOutlineClose
+          className='fixed w-96 mb-28 ml-[70px] text-hanaSilver cursor-pointer'
+          onClick={closeModal}
+        />
         <p className='font-hanaMedium text-center text-lg mt-2'>
           {modalMessage}
         </p>

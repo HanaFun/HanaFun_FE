@@ -13,24 +13,29 @@ interface IProps {
 
 export const LessonSlider = ({ data, show, option }: IProps) => {
   const navigate = useNavigate();
-  const { openModal } = useModal();
+  const { openModal, closeModal } = useModal();
   const [activeCard, setActiveCard] = useState<number | null>(null);
 
   const handleModalOpen = (index: number) => {
     setActiveCard(activeCard === index ? null : index);
   };
 
-  const handleDelete = (reservation_id: number) => {
-    const handleConfirm = (reservation_id: number) => {
-      // reservation_id 값으로 예약 취소 api 요청
-      console.log(reservation_id);
-      openModal('예약이 취소되었습니다', '', () => navigate('/my-lesson-list'));
-    };
+  const handleConfirm = (reservation_id: number) => {
+    console.log(reservation_id);
+    // reservation_id 값으로 예약 취소 api 요청
+    openModal('예약이 취소되었습니다', () => navigate('/my-lesson-list'));
+  };
 
-    // 모달 열고, 확인 버튼 누르면 reservation_id 보내주기
-    openModal('예약을 취소하시겠습니까?', '', () =>
-      handleConfirm(reservation_id)
-    );
+  const handleReportConfirm = () => {
+    openModal('신고가 접수되었습니다', closeModal);
+  };
+
+  const handleDelete = (reservation_id: number) => {
+    openModal('예약을 취소하시겠습니까?', () => handleConfirm(reservation_id));
+  };
+
+  const handleReport = () => {
+    openModal('해당 클래스를 신고하시겠습니까?', () => handleReportConfirm());
   };
 
   useEffect(() => {
@@ -67,7 +72,9 @@ export const LessonSlider = ({ data, show, option }: IProps) => {
                 <DropdownSingle
                   image='/images/mypage/dropdown_img.svg'
                   text='신고하기'
-                  handleClick={() => navigate('/mypage')}
+                  handleClick={() => {
+                    handleReport();
+                  }}
                 />
               )}
               {option === 'double' && (
@@ -76,8 +83,10 @@ export const LessonSlider = ({ data, show, option }: IProps) => {
                   image2='/images/mypage/dropdown_img.svg'
                   text1='예약취소'
                   text2='신고하기'
-                  handleClick1={() => handleDelete(myLesson.reservation_id)}
-                  handleClick2={() => navigate('/mypage')}
+                  handleClick1={() => {
+                    handleDelete(myLesson.reservation_id);
+                  }}
+                  handleClick2={() => handleReport()}
                 />
               )}
             </div>
