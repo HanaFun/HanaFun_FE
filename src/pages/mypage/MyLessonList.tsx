@@ -24,25 +24,21 @@ export const MyLessonList = () => {
   const nextLesson =
     allLessons?.filter((lesson) => moment(lesson.date).isAfter(today)) || [];
 
-  console.log('prev: ', prevLesson);
-  console.log('today: ', todayLesson);
-  console.log('next: ', nextLesson);
-
   return (
     <div className='font-hanaMedium'>
       <Topbar title='신청 클래스' onClick={() => navigate('/mypage')} />
       <div className='mt-6 ml-5'>
         <div>
           <p>오늘의 클래스</p>
-          <LessonSlider data={todayLesson} />
+          <LessonSlider data={todayLesson} show={true} option='single' />
         </div>
         <div className='mt-5'>
           <p>나의 예약 클래스</p>
-          <LessonSlider data={nextLesson} />
+          <LessonSlider data={nextLesson} show={true} option='double' />
         </div>
         <div className='mt-5'>
           <p>수강한 클래스</p>
-          <LessonSlider data={prevLesson} />
+          <LessonSlider data={prevLesson} show={true} option='double' />
         </div>
       </div>
     </div>

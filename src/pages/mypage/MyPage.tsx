@@ -65,7 +65,7 @@ const MyPage = () => {
         />
       </div>
       {lessons && lessons.length > 0 ? (
-        <LessonSlider data={lessons} />
+        <LessonSlider data={lessons} show={false} option='single' />
       ) : (
         <NotFindMyLesson />
       )}
