@@ -11,6 +11,8 @@ import { HanaMain } from './pages/main/HanaMain.tsx';
 import { Login } from './pages/auth/Login.tsx';
 import { HanaFunMain } from './pages/main/HanaFunMain.tsx';
 import { QRPay } from './pages/main/QRPay.tsx';
+import MyPage from './pages/mypage/MyPage.tsx';
+import { LessonCalendar } from './pages/mypage/LessonCalendar.tsx';
 
 const router = createBrowserRouter([
   {
@@ -22,7 +24,11 @@ const router = createBrowserRouter([
       { path: '/qr-pay', element: <QRPay /> },
       {
         element: <Navbar />,
-        children: [{ index: true, element: <HanaFunMain /> }],
+        children: [
+          { index: true, element: <HanaFunMain /> },
+          { path: '/mypage', element: <MyPage /> },
+          { path: '/lessonCalendar', element: <LessonCalendar /> },
+        ],
       },
     ],
   },
