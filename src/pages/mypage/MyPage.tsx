@@ -11,7 +11,7 @@ const MyPage = () => {
   const navigate = useNavigate();
 
   const handleNavigate = () => {
-    navigate('/myLessonList');
+    navigate('/my-lesson-list');
   };
 
   // data 가져오기

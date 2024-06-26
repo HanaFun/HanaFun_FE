@@ -28,8 +28,8 @@ const router = createBrowserRouter([
         children: [
           { index: true, element: <HanaFunMain /> },
           { path: '/mypage', element: <MyPage /> },
-          { path: '/lessonCalendar', element: <LessonCalendar /> },
-          { path: '/myLessonList', element: <MyLessonList /> },
+          { path: '/lesson-calendar', element: <LessonCalendar /> },
+          { path: '/my-lesson-list', element: <MyLessonList /> },
         ],
       },
     ],
