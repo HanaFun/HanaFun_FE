@@ -23,7 +23,7 @@ const infoHost = [
 
 export const OpenLessonMain = () => {
   const navigate = useNavigate();
-  const [isHost, setIsHost] = useState<boolean>(true);
+  const [isHost, setIsHost] = useState<boolean>(false);
 
   return (
     <>
