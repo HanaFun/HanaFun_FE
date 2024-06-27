@@ -8,6 +8,7 @@ import { CompleteSend } from '../../components/organisms/CompleteSend';
 
 export const RegisterHost = () => {
   const navigate = useNavigate();
+  const [isBtnActive, setIsBtnActive] = useState<boolean>(false);
   const [isSend, setIsSend] = useState<boolean>(false);
   const [accountId, setAccountId] = useState<number>(-1);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -55,6 +56,7 @@ export const RegisterHost = () => {
         />
       )}
       <Button
+        isActive={isBtnActive}
         message={!isSend ? '등록' : '클래스 개설하기'}
         onClick={() =>
           !isSend ? handleRegisterHost() : navigate('/open-lesson/lesson')

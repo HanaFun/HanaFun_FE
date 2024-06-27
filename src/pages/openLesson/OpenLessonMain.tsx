@@ -90,6 +90,7 @@ export const OpenLessonMain = () => {
           ))}
         </div>
         <Button
+          isActive={true}
           message='클래스 개설하기'
           onClick={() => {
             isHost

@@ -4,11 +4,12 @@ import { Button } from '../../components/common/Button';
 import { ChangeEvent, useRef, useState } from 'react';
 import { CompleteSend } from '../../components/organisms/CompleteSend';
 import { FaAngleDown, FaCamera } from 'react-icons/fa';
-import { LuMinusCircle, LuPlusCircle } from 'react-icons/lu';
 import { SelectAddress } from '../../components/molecules/SelectAddress';
 import { ModalBottomContainer } from '../../components/organisms/ModalBottomContainer';
 import { AddLessonInputLabel } from '../../components/Atom/AddLessonInputLabel';
 import { AddLessonInput } from '../../components/molecules/AddLessonInput';
+import { AddLessonMaterialList } from '../../components/molecules/AddLessonMaterialList';
+import { AddLessonTimeList } from '../../components/molecules/AddLessonTimeList';
 
 const categories = [
   '요리',
@@ -21,25 +22,17 @@ const categories = [
   '뷰티',
 ];
 
+export type LessonTime = {
+  date: Date;
+  startTime: number;
+  endTime: number;
+};
+
 export const RegisterLesson = () => {
   const navigate = useNavigate();
+  const [isBtnActive, setIsBtnActive] = useState<boolean>(false);
   const [isSend, setIsSend] = useState<boolean>(false);
   const [showModal, setShowModal] = useState<boolean>(false);
-  const inputMaterialNextID = useRef<number>(1);
-  const [inputMaterialItems, setInputMaterialItems] = useState<
-    { id: number; text: string }[]
-  >([{ id: 0, text: '' }]);
-  const inputTimeNextID = useRef<number>(1);
-  const [inputTimeItems, setInputTimeItems] = useState<
-    { id: number; date: Date; startTime: number; endTime: number }[]
-  >([
-    {
-      id: 0,
-      date: new Date(),
-      startTime: new Date().getTime(),
-      endTime: new Date().getTime(),
-    },
-  ]);
 
   const [uploadImageFile, setUploadImageFile] = useState<string | null>(null);
   const inputTitle = useRef<HTMLInputElement | null>(null);
@@ -47,81 +40,63 @@ export const RegisterLesson = () => {
   const [address, setAddress] = useState<string>('');
   const inputCapacity = useRef<HTMLInputElement | null>(null);
   const inputPrice = useRef<HTMLInputElement | null>(null);
+  const [lessonTime, setLessonTime] = useState<LessonTime[]>([]);
+  const [materials, setMaterials] = useState<string>('');
   const inputDetailInfo = useRef<HTMLTextAreaElement | null>(null);
-
-  // input 추가
-  const addInput = (isTime: boolean) => {
-    if (isTime) {
-      if (inputTimeItems.length >= 5) return;
-      const input = {
-        id: inputTimeNextID.current,
-        date: new Date(),
-        startTime: new Date().getTime(),
-        endTime: new Date().getTime(),
-      };
-      setInputTimeItems([...inputTimeItems, input]);
-      inputTimeNextID.current += 1;
-    } else {
-      if (inputMaterialItems.length >= 5) return;
-      const input = { id: inputMaterialNextID.current, text: '' };
-      setInputMaterialItems([...inputMaterialItems, input]);
-      inputMaterialNextID.current += 1;
-    }
-  };
-
-  // input 삭제
-  const deleteInput = (isTime: boolean, index: number) => {
-    if (isTime)
-      setInputTimeItems(inputTimeItems.filter((item) => item.id !== index));
-    else
-      setInputMaterialItems(
-        inputMaterialItems.filter((item) => item.id !== index)
-      );
-  };
-
-  const handleMaterialInput = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    index: number
-  ) => {
-    if (index > inputMaterialItems.length) return;
-    const inputItemsCopy = JSON.parse(JSON.stringify(inputMaterialItems));
-    inputItemsCopy[index].text = e.target.value;
-    setInputMaterialItems(inputItemsCopy);
-  };
-
-  const handleTimeInput = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    index: number
-  ) => {
-    if (index > inputTimeItems.length) return;
-    const inputItemsCopy = JSON.parse(JSON.stringify(inputTimeItems));
-    inputItemsCopy[index].text = e.target.value;
-    setInputTimeItems(inputItemsCopy);
-  };
 
   const onChangeUploadImage = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const file = e.target.files[0];
       const imageUrl = URL.createObjectURL(file);
       setUploadImageFile(imageUrl);
-
-      const formData = new FormData();
-      if (file) {
-        formData.append('file', file);
-        console.log('formData>>', formData);
-      }
+      checkValid();
+      // const formData = new FormData();
+      // if (file) {
+      //   formData.append('file', file);
+      //   console.log('formData>>', formData);
+      // }
     }
   };
 
   const onChangeCategory = (category: string) => {
     setCategory(category);
     setShowModal(false);
+    checkValid();
+  };
+
+  const onChangeLessonTime = (lessontime: LessonTime[]) => {
+    setLessonTime(lessontime);
+    checkValid();
+  };
+
+  const onChangeMaterials = (materials: string) => {
+    setMaterials(materials);
+    checkValid();
   };
 
   const onChangeAddress = (address: string) => {
     if (address && address.length !== 1) {
       setAddress(address);
-    } else alert('주소를 입력해주세요.');
+      checkValid();
+    }
+  };
+
+  const checkValid = () => {
+    if (
+      !uploadImageFile ||
+      inputTitle.current?.value === '' ||
+      category === '' ||
+      inputCapacity.current?.value === '' ||
+      inputPrice.current?.value === '' ||
+      lessonTime.length === 0 ||
+      address === '' ||
+      inputDetailInfo.current?.value === ''
+    ) {
+      setIsBtnActive(false);
+      return;
+    }
+
+    setIsBtnActive(true);
   };
 
   const handlePostAddLesson = () => {
@@ -130,11 +105,11 @@ export const RegisterLesson = () => {
     console.log('카테고리>>', category);
     console.log('모집인원>>', inputCapacity.current?.value);
     console.log('가격>>', inputPrice.current?.value);
-    console.log('클래스 일정>>', uploadImageFile);
+    console.log('클래스 일정>>', lessonTime);
     console.log('장소>>', address);
-    console.log('준비물>>', uploadImageFile);
+    console.log('준비물>>', materials);
     console.log('상세설명>>', inputDetailInfo.current?.value);
-    // setIsSend(true);
+    setIsSend(true);
   };
 
   return (
@@ -193,6 +168,7 @@ export const RegisterLesson = () => {
             type='text'
             title='강좌명'
             placeholder='강좌명을 입력해주세요.(최대 50자)'
+            onChange={checkValid}
             ref={inputTitle}
           />
 
@@ -212,110 +188,25 @@ export const RegisterLesson = () => {
             type='number'
             title='모집인원'
             placeholder='모집인원을 입력해주세요.'
+            onChange={checkValid}
             ref={inputCapacity}
           />
           <AddLessonInput
             type='number'
             title='가격'
             placeholder='가격을 입력해주세요.'
+            onChange={checkValid}
             ref={inputPrice}
           />
-          <AddLessonInputLabel title='클래스 일정'>
-            {inputTimeItems.map((item, index) => (
-              <div
-                key={index}
-                className={`w-full flex items-center justify-center gap-3 ${inputTimeItems.length > 1 && index !== inputTimeItems.length - 1 ? 'mb-2' : undefined}`}
-              >
-                <div className='w-1/2'>
-                  <p
-                    className={`font-hanaLight text-xs text-black/70 mb-1 ${index !== 0 && 'hidden'}`}
-                  >
-                    클래스 날짜
-                  </p>
-                  <input
-                    type='date'
-                    placeholder='클래스 날짜'
-                    className='w-full text-center rounded border-[0.7px] border-hanaSilver text-xs placeholder:text-hanaSilver p-2 focus:outline-none'
-                    onBlur={(e) => handleTimeInput(e, index)}
-                  />
-                </div>
-                <div className='w-1/2 flex justify-center gap-2'>
-                  <div className='w-1/2'>
-                    <p
-                      className={`w-full font-hanaLight text-xs text-black/70 mb-1 ${index !== 0 && 'hidden'}`}
-                    >
-                      시작 시간
-                    </p>
-                    <input
-                      type='time'
-                      className='w-full text-center rounded border-[0.7px] border-hanaSilver text-xs placeholder:text-hanaSilver p-2 focus:outline-none'
-                      onBlur={(e) => handleTimeInput(e, index)}
-                    />
-                  </div>
-                  <div className='w-1/2'>
-                    <p
-                      className={`w-full font-hanaLight text-xs text-black/70 mb-1 ${index !== 0 && 'hidden'}`}
-                    >
-                      종료 시간
-                    </p>
-                    <input
-                      type='time'
-                      className='w-full text-center rounded border-[0.7px] border-hanaSilver text-xs placeholder:text-hanaSilver p-2 focus:outline-none'
-                      onBlur={(e) => handleTimeInput(e, index)}
-                    />
-                  </div>
-                </div>
-                {index === 0 ? (
-                  <LuPlusCircle
-                    size={24}
-                    className='text-hanaSilver mt-5'
-                    onClick={() => addInput(true)}
-                  />
-                ) : (
-                  <LuMinusCircle
-                    size={24}
-                    className='text-hanaSilver'
-                    onClick={() => deleteInput(true, item.id)}
-                  />
-                )}
-              </div>
-            ))}
-          </AddLessonInputLabel>
-
+          <AddLessonTimeList onChangeTimes={onChangeLessonTime} />
           <SelectAddress onChangeAddress={onChangeAddress} />
-          <AddLessonInputLabel title='준비물'>
-            {inputMaterialItems.map((item, index) => (
-              <div
-                key={item.id}
-                className={`flex items-center gap-3 ${inputMaterialItems.length > 1 && index !== inputMaterialItems.length - 1 ? 'mb-2' : undefined}`}
-              >
-                <input
-                  type='text'
-                  placeholder='준비물 입력해주세요.'
-                  className='w-1/2 rounded border-[0.7px] border-hanaSilver text-xs placeholder:text-hanaSilver p-2 focus:outline-none'
-                  onBlur={(e) => handleMaterialInput(e, index)}
-                />
-                {index === 0 ? (
-                  <LuPlusCircle
-                    size={24}
-                    className='text-hanaSilver'
-                    onClick={() => addInput(false)}
-                  />
-                ) : (
-                  <LuMinusCircle
-                    size={24}
-                    className='text-hanaSilver'
-                    onClick={() => deleteInput(false, item.id)}
-                  />
-                )}
-              </div>
-            ))}
-          </AddLessonInputLabel>
+          <AddLessonMaterialList onChangeMaterials={onChangeMaterials} />
           <AddLessonInputLabel title='상세 설명'>
             <textarea
               ref={inputDetailInfo}
               placeholder='상세 설명을 입력해주세요. (200자 이내)'
               maxLength={200}
+              onChange={checkValid}
               className='w-full h-36 rounded-md border-[0.7px] border-hanaSilver text-xs placeholder:text-hanaSilver p-3 focus:outline-none'
             ></textarea>
           </AddLessonInputLabel>
@@ -325,6 +216,7 @@ export const RegisterLesson = () => {
       )}
       <Button
         message={!isSend ? '등록' : '완료'}
+        isActive={isBtnActive}
         onClick={() => {
           !isSend ? handlePostAddLesson() : navigate('/mypage');
         }}
