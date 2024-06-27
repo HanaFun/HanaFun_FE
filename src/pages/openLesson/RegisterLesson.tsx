@@ -7,6 +7,8 @@ import { FaAngleDown, FaCamera } from 'react-icons/fa';
 import { LuMinusCircle, LuPlusCircle } from 'react-icons/lu';
 import { SelectAddress } from '../../components/molecules/SelectAddress';
 import { ModalBottomContainer } from '../../components/organisms/ModalBottomContainer';
+import { AddLessonInputLabel } from '../../components/Atom/AddLessonInputLabel';
+import { AddLessonInput } from '../../components/molecules/AddLessonInput';
 
 const categories = [
   '요리',
@@ -40,8 +42,12 @@ export const RegisterLesson = () => {
   ]);
 
   const [uploadImageFile, setUploadImageFile] = useState<string | null>(null);
+  const inputTitle = useRef<HTMLInputElement | null>(null);
   const [category, setCategory] = useState<string>('');
   const [address, setAddress] = useState<string>('');
+  const inputCapacity = useRef<HTMLInputElement | null>(null);
+  const inputPrice = useRef<HTMLInputElement | null>(null);
+  const inputDetailInfo = useRef<HTMLTextAreaElement | null>(null);
 
   // input 추가
   const addInput = (isTime: boolean) => {
@@ -118,6 +124,19 @@ export const RegisterLesson = () => {
     } else alert('주소를 입력해주세요.');
   };
 
+  const handlePostAddLesson = () => {
+    console.log('사진>>', uploadImageFile);
+    console.log('강좌명>>', inputTitle.current?.value);
+    console.log('카테고리>>', category);
+    console.log('모집인원>>', inputCapacity.current?.value);
+    console.log('가격>>', inputPrice.current?.value);
+    console.log('클래스 일정>>', uploadImageFile);
+    console.log('장소>>', address);
+    console.log('준비물>>', uploadImageFile);
+    console.log('상세설명>>', inputDetailInfo.current?.value);
+    // setIsSend(true);
+  };
+
   return (
     <>
       {showModal && (
@@ -147,13 +166,7 @@ export const RegisterLesson = () => {
       <Topbar title='클래스 등록' onClick={() => navigate('/open-lesson')} />
       {!isSend ? (
         <div className='pt-5 px-5 pb-24 flex flex-col'>
-          <div className='mb-5'>
-            <h1 className='font-hanaBold text-lg flex items-end mb-1'>
-              사진
-              <span className='font-hanaLight text-xs ml-1.5 mb-0.5'>
-                대표 이미지를 등록해주세요.
-              </span>
-            </h1>
+          <AddLessonInputLabel title='사진'>
             <input
               id='imgUploadInput'
               type='file'
@@ -175,18 +188,14 @@ export const RegisterLesson = () => {
                 </div>
               )}
             </label>
-          </div>
-          <div className='mb-5'>
-            <h1 className='font-hanaBold text-lg flex items-end mb-1'>
-              강좌명
-            </h1>
-            <input
-              type='text'
-              placeholder='강좌명을 입력해주세요.(최대 50자)'
-              maxLength={50}
-              className='w-full rounded border-[0.7px] border-hanaSilver text-xs placeholder:text-hanaSilver p-2 focus:outline-none'
-            />
-          </div>
+          </AddLessonInputLabel>
+          <AddLessonInput
+            type='text'
+            title='강좌명'
+            placeholder='강좌명을 입력해주세요.(최대 50자)'
+            ref={inputTitle}
+          />
+
           <div className='mb-5'>
             <h1 className='font-hanaBold text-lg flex items-end mb-1'>
               카테고리
@@ -199,28 +208,19 @@ export const RegisterLesson = () => {
               <FaAngleDown size={16} />
             </div>
           </div>
-          <div className='mb-5'>
-            <h1 className='font-hanaBold text-lg flex items-end mb-1'>
-              모집인원
-            </h1>
-            <input
-              type='number'
-              placeholder='모집인원을 입력해주세요.'
-              className='w-full rounded border-[0.7px] border-hanaSilver text-xs placeholder:text-hanaSilver p-2 focus:outline-none'
-            />
-          </div>
-          <div className='mb-5'>
-            <h1 className='font-hanaBold text-lg flex items-end mb-1'>가격</h1>
-            <input
-              type='number'
-              placeholder='가격을 입력해주세요.'
-              className='w-full rounded border-[0.7px] border-hanaSilver text-xs placeholder:text-hanaSilver p-2 focus:outline-none'
-            />
-          </div>
-          <div className='mb-5'>
-            <h1 className='font-hanaBold text-lg flex items-end mb-1'>
-              클래스 일정
-            </h1>
+          <AddLessonInput
+            type='number'
+            title='모집인원'
+            placeholder='모집인원을 입력해주세요.'
+            ref={inputCapacity}
+          />
+          <AddLessonInput
+            type='number'
+            title='가격'
+            placeholder='가격을 입력해주세요.'
+            ref={inputPrice}
+          />
+          <AddLessonInputLabel title='클래스 일정'>
             {inputTimeItems.map((item, index) => (
               <div
                 key={index}
@@ -280,12 +280,10 @@ export const RegisterLesson = () => {
                 )}
               </div>
             ))}
-          </div>
+          </AddLessonInputLabel>
+
           <SelectAddress onChangeAddress={onChangeAddress} />
-          <div className='mb-5'>
-            <h1 className='font-hanaBold text-lg flex items-end mb-1'>
-              준비물
-            </h1>
+          <AddLessonInputLabel title='준비물'>
             {inputMaterialItems.map((item, index) => (
               <div
                 key={item.id}
@@ -312,17 +310,15 @@ export const RegisterLesson = () => {
                 )}
               </div>
             ))}
-          </div>
-          <div className='mb-5'>
-            <h1 className='font-hanaBold text-lg flex items-end mb-1'>
-              상세설명
-            </h1>
+          </AddLessonInputLabel>
+          <AddLessonInputLabel title='상세 설명'>
             <textarea
+              ref={inputDetailInfo}
               placeholder='상세 설명을 입력해주세요. (200자 이내)'
               maxLength={200}
               className='w-full h-36 rounded-md border-[0.7px] border-hanaSilver text-xs placeholder:text-hanaSilver p-3 focus:outline-none'
             ></textarea>
-          </div>
+          </AddLessonInputLabel>
         </div>
       ) : (
         <CompleteSend title2='클래스 등록이 완료되었습니다!' />
@@ -330,7 +326,7 @@ export const RegisterLesson = () => {
       <Button
         message={!isSend ? '등록' : '완료'}
         onClick={() => {
-          !isSend ? undefined : navigate('/mypage');
+          !isSend ? handlePostAddLesson() : navigate('/mypage');
         }}
       />
     </>
