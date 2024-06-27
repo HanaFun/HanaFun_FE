@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from 'react';
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md';
-import { ModalContainer } from './ModalContainer';
+import { ModalBottomContainer } from './ModalBottomContainer';
 
 type accountType = {
   accountId: number;
@@ -21,12 +21,12 @@ export const ChoiceAccount: FC<IProps> = ({ accounts, selectedAccountId }) => {
     accountNumber: accounts[0].accountNumber,
     balance: accounts[0].balance,
   });
-  const [isToggle, setIsToggle] = useState<boolean>(false);
+  const [showModal, setShowModal] = useState<boolean>(false);
 
   const handleChangedAccount = (account: accountType) => {
     setSelectedAccount(account);
     selectedAccountId(account.accountId);
-    setIsToggle(false);
+    setShowModal(false);
   };
 
   useEffect(() => {
@@ -35,8 +35,11 @@ export const ChoiceAccount: FC<IProps> = ({ accounts, selectedAccountId }) => {
 
   return (
     <>
-      {isToggle && (
-        <ModalContainer color='#FFFFFF' onClose={() => setIsToggle(false)}>
+      {showModal && (
+        <ModalBottomContainer
+          color='#FFFFFF'
+          onClose={() => setShowModal(false)}
+        >
           <h3 className='font-hanaBold text-lg'>계좌선택</h3>
           <div className='w-full'>
             <hr />
@@ -62,12 +65,12 @@ export const ChoiceAccount: FC<IProps> = ({ accounts, selectedAccountId }) => {
               ))}
             </div>
           </div>
-        </ModalContainer>
+        </ModalBottomContainer>
       )}
       <div
         key={selectedAccount.accountId}
         className='flex justify-between items-center bg-[#F1F1F1] rounded-md px-4 py-2'
-        onClick={() => setIsToggle(true)}
+        onClick={() => setShowModal(true)}
       >
         <div className='flex flex-col items-start'>
           <p className='flex items-center justify-center gap-1 font-hanaMedium text-base text-black'>
@@ -79,11 +82,11 @@ export const ChoiceAccount: FC<IProps> = ({ accounts, selectedAccountId }) => {
           </p>
         </div>
         <div className='flex flex-col items-end gap-1'>
-          {isToggle ? (
+          {showModal ? (
             <MdKeyboardArrowUp
               size={24}
               className='cursor-pointer mt-1.5'
-              onClick={() => setIsToggle(false)}
+              onClick={() => setShowModal(false)}
             />
           ) : (
             <MdKeyboardArrowDown size={24} className='cursor-pointer mt-1.5' />

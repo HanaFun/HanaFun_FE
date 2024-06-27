@@ -1,8 +1,7 @@
 import QRCode from 'qrcode.react';
 import { FC, useState } from 'react';
-import { IoMdClose } from 'react-icons/io';
 import { QRScanner } from './QRScanner';
-import { ModalContainer } from '../organisms/ModalContainer';
+import { ModalBottomContainer } from '../organisms/ModalBottomContainer';
 
 interface IProps {
   userId: number;
@@ -21,7 +20,7 @@ export const QR: FC<IProps> = ({
   const [isScan, setIsScan] = useState(false);
 
   return (
-    <ModalContainer onClose={onClose} color='#FFFFFF'>
+    <ModalBottomContainer onClose={onClose} color='#FFFFFF'>
       <div
         className='mt-12 mb-8 bg-[#D9D9D9] w-52 rounded-[2rem] px-2 py-1 flex justify-center items-center gap-2'
         onClick={() => setIsScan(!isScan)}
@@ -51,6 +50,6 @@ export const QR: FC<IProps> = ({
           />
         </div>
       )}
-    </ModalContainer>
+    </ModalBottomContainer>
   );
 };

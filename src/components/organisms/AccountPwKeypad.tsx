@@ -1,7 +1,6 @@
 import { FC, useEffect, useState } from 'react';
 import { PasswordKeypad } from '../molecules/PasswordKeypad';
-import { IoMdClose } from 'react-icons/io';
-import { ModalContainer } from './ModalContainer';
+import { ModalBottomContainer } from './ModalBottomContainer';
 
 type AccountasswordType = {
   [number: number]: number;
@@ -46,7 +45,7 @@ export const AccountPwKeypad: FC<IProps> = ({
   }, [password]);
 
   return (
-    <ModalContainer onClose={onClose} color='#373A4D'>
+    <ModalBottomContainer onClose={onClose} color='#373A4D'>
       <h3 className='flex text-white font-hanaRegular text-base'>
         간편비밀번호 입력
       </h3>
@@ -63,6 +62,6 @@ export const AccountPwKeypad: FC<IProps> = ({
         handleChangePw={onChangePassword}
         handleCancle={canclePassword}
       />
-    </ModalContainer>
+    </ModalBottomContainer>
   );
 };

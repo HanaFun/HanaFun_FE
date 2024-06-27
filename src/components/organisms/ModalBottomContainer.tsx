@@ -7,7 +7,11 @@ interface IProps {
   onClose: () => void;
 }
 
-export const ModalContainer: FC<IProps> = ({ children, color, onClose }) => {
+export const ModalBottomContainer: FC<IProps> = ({
+  children,
+  color,
+  onClose,
+}) => {
   return (
     <>
       <div
