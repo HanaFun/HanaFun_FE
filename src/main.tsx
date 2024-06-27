@@ -15,6 +15,7 @@ import { LessonCalendar } from './pages/mypage/LessonCalendar.tsx';
 import { MyLessonList } from './pages/mypage/MyLessonList.tsx';
 import { HostPage } from './pages/mypage/HostPage.tsx';
 import { HostLessonCalendar } from './pages/mypage/HostLessonCalendar.tsx';
+import { Sales } from './pages/mypage/Sales.tsx';
 
 const router = createBrowserRouter([
   {
@@ -36,6 +37,7 @@ const router = createBrowserRouter([
             path: '/host/lesson-calendar/1',
             element: <HostLessonCalendar />,
           },
+          { path: '/sales', element: <Sales /> },
         ],
       },
     ],
