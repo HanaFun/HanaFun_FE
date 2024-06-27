@@ -32,7 +32,10 @@ const router = createBrowserRouter([
           { path: '/lesson-calendar', element: <LessonCalendar /> },
           { path: '/my-lesson-list', element: <MyLessonList /> },
           { path: '/host', element: <HostPage /> },
-          { path: '/host/lesson-calendar', element: <HostLessonCalendar /> },
+          {
+            path: '/host/lesson-calendar/1',
+            element: <HostLessonCalendar />,
+          },
         ],
       },
     ],

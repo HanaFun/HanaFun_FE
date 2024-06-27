@@ -65,6 +65,14 @@ export class ApiClient {
     return data;
   }
 
+  // 임의 데이터. 개설 클래스 상세정보 호출
+  public static async getHostLessonDetail(): Promise<HostLessonDetailType[]> {
+    const apiUrl = '/data/hostLessonDetail.json';
+    const response = await fetch(apiUrl);
+    const data = await response.json();
+    return data;
+  }
+
   //---------users---------
   // async postLogin(user: LoginReqType) {
   //   const response = await this.axiosInstance.request<LoginType>({
