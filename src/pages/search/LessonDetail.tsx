@@ -42,7 +42,7 @@ export const LessonDetail = () => {
   const [shownotice, setShowNotice] = useState<boolean>(false);
   const [copyLocation, setCopyLocation] = useState<boolean>(false);
   const [materials, setMaterials] = useState<string[]>([]);
-  const [choiceModal, setChoiceModal] = useState<boolean>(true);
+  const [choiceModal, setChoiceModal] = useState<boolean>(false);
 
   const handleCopyClipBoard = async (text: string) => {
     try {

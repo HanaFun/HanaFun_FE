@@ -97,7 +97,7 @@ export const LessonSearch = () => {
           {selectedSort}
         </button>
         {showSortBtn && (
-          <div className='absolute flex flex-col justify-center items-center w-16 bg-white top-56 right-5 border-[0.1rem] border-black/50'>
+          <div className='absolute z-10 flex flex-col justify-center items-center w-16 bg-white top-56 right-5 border-[0.1rem] border-black/50'>
             {sortCategories.map((sort, index) => (
               <div key={index} className='flex flex-col'>
                 <p
