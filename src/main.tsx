@@ -19,6 +19,7 @@ import { MyLessonList } from './pages/mypage/MyLessonList.tsx';
 import { HostPage } from './pages/mypage/HostPage.tsx';
 import { HostLessonCalendar } from './pages/mypage/HostLessonCalendar.tsx';
 import { Sales } from './pages/mypage/Sales.tsx';
+import { SalesYear } from './pages/mypage/SalesYear.tsx';
 
 const router = createBrowserRouter([
   {
@@ -36,14 +37,18 @@ const router = createBrowserRouter([
           { index: true, element: <HanaFunMain /> },
           { path: '/open-lesson', element: <OpenLessonMain /> },
           { path: '/mypage', element: <MyPage /> },
-          { path: '/lesson-calendar', element: <LessonCalendar /> },
-          { path: '/my-lesson-list', element: <MyLessonList /> },
-          { path: '/host', element: <HostPage /> },
+          { path: '/mypage/lesson-calendar', element: <LessonCalendar /> },
+          { path: '/mypage/my-lesson-list', element: <MyLessonList /> },
+          { path: '/mypage/host', element: <HostPage /> },
           {
-            path: '/host/lesson-calendar/1',
+            path: '/mypage/host/lesson-calendar/1',
             element: <HostLessonCalendar />,
           },
-          { path: '/sales', element: <Sales /> },
+          { path: '/mypage/host/sales', element: <Sales /> },
+          {
+            path: '/mypage/host/sales/sales-year/2024/1',
+            element: <SalesYear />,
+          },
         ],
       },
     ],
