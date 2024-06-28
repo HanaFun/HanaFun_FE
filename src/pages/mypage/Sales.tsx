@@ -26,7 +26,7 @@ export const Sales = () => {
       <Topbar title='매출 관리' onClick={() => navigate('/host')} />
       <p className='font-hanaMedium text-xl mt-5 ml-5'>매출 관리</p>
       <div className='flex flex-col justify-center items-center'>
-        <TotalSalesCard year={year} month={month} data={monthRevenue} />
+        <TotalSalesCard initYear={year} initMonth={month} data={monthRevenue} />
         <TotalSales />
       </div>
     </div>
