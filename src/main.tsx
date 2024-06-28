@@ -41,12 +41,12 @@ const router = createBrowserRouter([
           { path: '/mypage/my-lesson-list', element: <MyLessonList /> },
           { path: '/mypage/host', element: <HostPage /> },
           {
-            path: '/mypage/host/lesson-calendar/1',
+            path: '/mypage/host/lesson-calendar/:lesson_id',
             element: <HostLessonCalendar />,
           },
           { path: '/mypage/host/sales', element: <Sales /> },
           {
-            path: '/mypage/host/sales/sales-year/2024/1',
+            path: '/mypage/host/sales/sales-year/:year/:lesson_id',
             element: <SalesYear />,
           },
         ],
