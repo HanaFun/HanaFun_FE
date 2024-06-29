@@ -76,6 +76,8 @@ export const HanaFunMain = () => {
   const sendAccountPassword = (password: string) => {
     console.log('비밀번호>>', password);
     console.log('로그인');
+    setShowKeypad(false);
+    setShowDropdown(false);
     setShowQr(true);
   };
 
