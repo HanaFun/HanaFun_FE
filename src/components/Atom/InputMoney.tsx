@@ -13,11 +13,13 @@ export const InputMoney: FC<IProps> = ({
   changeMoney,
 }) => {
   const moneyInputRef = useRef<HTMLInputElement | null>(null);
-  const [width, setWidth] = useState<number>(maxMoney.toLocaleString().length);
+  const [width, setWidth] = useState<number>(
+    isChangeMoney ? 2 : maxMoney.toLocaleString().length
+  );
   const [showMessage, setShowMessage] = useState<boolean>(false);
 
   const handleChangeMoney = () => {
-    if (moneyInputRef.current) {
+    if (changeMoney && moneyInputRef.current) {
       moneyInputRef.current.value = changeMoneyFormat(
         moneyInputRef.current.value
       );
@@ -26,7 +28,9 @@ export const InputMoney: FC<IProps> = ({
           ? 2
           : moneyInputRef.current.value.length
       );
-      if (+moneyInputRef.current.value.replace(/[,]/gi, '') > maxMoney) {
+      const money = +moneyInputRef.current.value.replace(/[,]/gi, '');
+      changeMoney(money);
+      if (money > maxMoney) {
         setShowMessage(true);
         return;
       }
@@ -41,7 +45,7 @@ export const InputMoney: FC<IProps> = ({
           ref={moneyInputRef}
           type='text'
           maxLength={11}
-          defaultValue={maxMoney.toLocaleString()}
+          defaultValue={isChangeMoney ? 0 : maxMoney.toLocaleString()}
           disabled={!isChangeMoney}
           onChange={handleChangeMoney}
           className='border-none bg-transparent text-end pr-2 focus:outline-none'
