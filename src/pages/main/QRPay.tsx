@@ -116,9 +116,9 @@ export const QRPay = () => {
       {hostLessonDetail && showLessonDateList && (
         <ModalBottomContainer
           color='#FFFFFF'
-          onClose={() => setShowLessonList(false)}
+          onClose={() => setShowLessonDateList(false)}
         >
-          <h3 className='font-hanaBold text-lg'>클래스를 선택해주세요.</h3>
+          <h3 className='font-hanaBold text-lg'>클래스 일정을 선택해주세요.</h3>
           <div className='w-full'>
             <hr />
             <div className='max-h-60 overflow-y-auto scrollbar-hide px-6 py-2'>
