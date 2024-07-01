@@ -1,16 +1,24 @@
 import { useState } from 'react';
 import { BsPencil } from 'react-icons/bs';
 import { GrFormNext, GrFormPrevious } from 'react-icons/gr';
+import Keypad from '../common/Keypad';
+import { EditPrice } from './EditPrice';
 
 export const Calculator = () => {
-  const currentMonth = new Date().getMonth() + 1; // getMonth() returns 0-based month
+  const currentMonth = new Date().getMonth() + 1;
   const [month, setMonth] = useState(6);
 
-  const totalSales = 762000;
-  const totalPrice = 250000;
-  const materialPrice = 100000;
-  const rentalPrice = 100000;
-  const etcPrice = 50000;
+  const [editPriceVisible, setEditPriceVisible] = useState(false);
+  const [keypadVisible, setKeypadVisible] = useState(false);
+  const [valueSetter, setValueSetter] = useState<
+    ((value: string) => void) | null
+  >(null);
+
+  const [totalSales, setTotalSales] = useState(762000);
+  const [totalPrice, setTotalPrice] = useState(250000);
+  const [materialPrice, setMaterialPrice] = useState(100000);
+  const [rentalPrice, setRentalPrice] = useState(100000);
+  const [etcPrice, setEtcPrice] = useState(50000);
   const netProfit = totalSales - totalPrice;
 
   const handlePreviousMonth = () => {
@@ -21,6 +29,23 @@ export const Calculator = () => {
     if (month < currentMonth) {
       setMonth((prevMonth) => prevMonth + 1);
     }
+  };
+
+  const openEditPrice = () => {
+    setEditPriceVisible(true);
+    setKeypadVisible(true);
+  };
+
+  const closeEditPrice = () => {
+    setEditPriceVisible(false);
+    setKeypadVisible(false);
+  };
+
+  const saveEditPrice = (material: string, rental: string, etc: string) => {
+    setMaterialPrice(Number(material));
+    setRentalPrice(Number(rental));
+    setEtcPrice(Number(etc));
+    setTotalPrice(Number(material) + Number(rental) + Number(etc));
   };
 
   return (
@@ -45,7 +70,10 @@ export const Calculator = () => {
       <div className='flex justify-between mt-4 text-xl'>
         <div className='flex flex-row'>
           <p>지출액</p>
-          <BsPencil className='text-hanaSilver pt-1 pl-2 w-6 h-6 cursor-pointer' />
+          <BsPencil
+            className='text-hanaSilver pt-1 pl-2 w-6 h-6 cursor-pointer'
+            onClick={openEditPrice}
+          />
         </div>
         <p>{totalPrice}원</p>
       </div>
@@ -68,6 +96,19 @@ export const Calculator = () => {
         <p>순수익</p>
         <p className='font-hanaMedium text-hanaGreen'>{netProfit}원</p>
       </div>
+      {editPriceVisible && (
+        <EditPrice
+          closeEditPrice={closeEditPrice}
+          saveEditPrice={saveEditPrice}
+          setValue={setValueSetter}
+        />
+      )}
+      {/* {keypadVisible && (
+        <Keypad
+          setValue={(value) => valueSetter && valueSetter(value)}
+          closeKeypad={() => setKeypadVisible(false)}
+        />
+      )} */}
     </div>
   );
 };
