@@ -112,7 +112,7 @@ export const LineChart = () => {
   return (
     <ResponsiveLine
       data={data}
-      margin={{ top: 12, right: 12, bottom: 60, left: 36 }}
+      margin={{ top: 4, right: 12, bottom: 80, left: 36 }}
       xScale={{ type: 'point' }}
       yScale={{
         type: 'linear',

@@ -19,12 +19,15 @@ export const SalesYear = () => {
         <p>{year}년</p>
       </div>
       <div className='flex flex-col items-center justify-center'>
-        <div className='w-[351px] h-[240px] mt-3 bg-white rounded-xl shadow-md'>
+        <div className='w-[351px] h-[252px] mt-3 bg-white rounded-xl shadow-md'>
+          <p className='text-right text-[8px] mr-2 mt-2 font-hanaLight'>
+            단위 : 원
+          </p>
           <LineChart />
         </div>
       </div>
-      <div className='flex justify-center items-center flex-col'>
-        <p className='font-hanaMedium text-xl mt-7 mb-5 px-6'>순수익 계산기</p>
+      <p className='font-hanaMedium text-xl mt-7 mb-5 px-6'>순수익 계산기</p>
+      <div className='flex justify-center items-center flex-col mb-32'>
         <Calculator />
       </div>
     </div>
