@@ -3,15 +3,16 @@ import { Topbar } from '../../components/common/Topbar';
 import { Button } from '../../components/common/Button';
 import { ChangeEvent, useRef, useState } from 'react';
 import { CompleteSend } from '../../components/organisms/CompleteSend';
-import { FaAngleDown, FaCamera } from 'react-icons/fa';
+import { FaCamera } from 'react-icons/fa';
 import { SelectAddress } from '../../components/molecules/SelectAddress';
 import { ModalBottomContainer } from '../../components/organisms/ModalBottomContainer';
 import { AddLessonInputLabel } from '../../components/Atom/AddLessonInputLabel';
 import { AddLessonInput } from '../../components/molecules/AddLessonInput';
 import { AddLessonMaterialList } from '../../components/molecules/AddLessonMaterialList';
 import { AddLessonTimeList } from '../../components/molecules/AddLessonTimeList';
+import { ChoiceInput } from '../../components/molecules/ChoiceInput';
 
-const categories = [
+export const categories = [
   '요리',
   '여행',
   '스포츠',
@@ -140,7 +141,7 @@ export const RegisterLesson = () => {
       )}
       <Topbar title='클래스 등록' onClick={() => navigate('/open-lesson')} />
       {!isSend ? (
-        <div className='pt-5 px-5 pb-24 flex flex-col'>
+        <div className='pt-5 pb-24 flex flex-col'>
           <AddLessonInputLabel title='사진'>
             <input
               id='imgUploadInput'
@@ -171,18 +172,15 @@ export const RegisterLesson = () => {
             onChange={checkValid}
             ref={inputTitle}
           />
-
-          <div className='mb-5'>
+          <div className='mb-5 px-5'>
             <h1 className='font-hanaBold text-lg flex items-end mb-1'>
               카테고리
             </h1>
-            <div
-              className={`flex items-center justify-between w-full bg-white rounded border-[0.7px] border-hanaSilver text-xs p-2 cursor-pointer ${category !== '' ? 'text-black' : 'text-hanaSilver'}`}
-              onClick={() => setShowModal(true)}
-            >
-              {category !== '' ? category : '카테고리를 선택해주세요'}
-              <FaAngleDown size={16} />
-            </div>
+            <ChoiceInput
+              isChoice={category !== ''}
+              content={category !== '' ? category : '카테고리를 선택해주세요'}
+              openModal={() => setShowModal(true)}
+            />
           </div>
           <AddLessonInput
             type='number'
