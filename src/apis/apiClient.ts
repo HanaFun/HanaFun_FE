@@ -3,7 +3,7 @@ import { API_BASE_URL } from './url';
 import { getCookie } from '../utils/cookie';
 import { userApi } from './interfaces/userApi';
 import { LoginType } from '../types/user';
-import { AccountType } from '../types/account';
+import { AccountType, CheckPwReqType, CheckPwResType } from '../types/account';
 import { accountApi } from './interfaces/accountApi';
 import { hostApi } from './interfaces/hostApi';
 import { categoryApi } from './interfaces/categoryApi';
@@ -56,6 +56,17 @@ export class ApiClient implements userApi, accountApi, hostApi, categoryApi {
     >({
       method: 'get',
       url: '/account/list',
+    });
+    return response.data;
+  }
+
+  async getCheckPw(reqData: CheckPwReqType) {
+    const response = await this.axiosInstance.request<
+      BaseResponseType<CheckPwResType>
+    >({
+      method: 'get',
+      url: '/account/pw',
+      data: reqData,
     });
     return response.data;
   }

@@ -15,30 +15,14 @@ import { RiQrScan2Line } from 'react-icons/ri';
 import { getCookie } from '../../utils/cookie';
 import { useNavigate } from 'react-router-dom';
 import { QRScanner } from '../../components/molecules/QRScanner';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { ApiClient } from '../../apis/apiClient';
 import { Loading } from '../Loading';
-import { AccountType } from '../../types/account';
-
-const accountSliderSettings = {
-  className: 'center',
-  centerMode: true,
-  infinite: false,
-  centerPadding: '15px',
-  slidesToShow: 1,
-  speed: 500,
-  draggable: true,
-  arrows: false,
-};
-
-const infoCardSliderSettings = {
-  dots: true,
-  slidesToShow: 1,
-  speed: 500,
-  draggable: true,
-  arrows: false,
-  infinite: false,
-};
+import { AccountType, CheckPwReqType } from '../../types/account';
+import { Account_Slider_Over3_Settings } from '../../constants/accountSliderOver3Settings';
+import { Account_Slider_Under2_Settings } from '../../constants/accountSliderUnder2Settings';
+import { IntroCard_Slider_Settings } from '../../constants/introCardSliderSettings';
+import { useModal } from '../../context/ModalContext';
 
 export const HanaFunMain = () => {
   const navigate = useNavigate();
@@ -52,6 +36,7 @@ export const HanaFunMain = () => {
     accountNumber: '',
     balance: 0,
   });
+  const { openModal, closeModal } = useModal();
   const username = getCookie('username');
   const token = getCookie('token');
 
@@ -75,12 +60,26 @@ export const HanaFunMain = () => {
     staleTime: 10000,
   });
 
+  const { mutate: checkPw } = useMutation({
+    mutationFn: (reqData: CheckPwReqType) => {
+      const res = ApiClient.getInstance().getCheckPw(reqData);
+      return res;
+    },
+    onSuccess: (data) => {
+      if (data.isSuccess && data.data?.check) {
+        setShowKeypad(false);
+        setActive(null);
+        setShowQr(true);
+      } else openModal('비밀번호가 일치하지 않습니다.', closeModal);
+    },
+  });
+
   const sendAccountPassword = (password: string) => {
-    console.log('비밀번호>>', password);
-    console.log('로그인');
-    setShowKeypad(false);
-    setActive(null);
-    setShowQr(true);
+    console.log('dd>', selectedAccount.accountId, password);
+    checkPw({
+      accountId: selectedAccount.accountId,
+      password: password,
+    });
   };
 
   const clickedAccount = (account: AccountType, index: number) => {
@@ -153,7 +152,11 @@ export const HanaFunMain = () => {
 
         <div className='mt-6 flex items-center justify-center'>
           <Slide
-            settings={accountSliderSettings}
+            settings={
+              accountList?.data && accountList.data.length > 2
+                ? Account_Slider_Over3_Settings
+                : Account_Slider_Under2_Settings
+            }
             cssName={`custom-slider ${accountList?.data?.length === 1 && 'one-item'}`}
           >
             {accountList?.data &&
@@ -194,7 +197,7 @@ export const HanaFunMain = () => {
         </div>
 
         <div className='mt-6 w-full flex items-center justify-center'>
-          <Slide settings={infoCardSliderSettings} cssName='custom-slider2'>
+          <Slide settings={IntroCard_Slider_Settings} cssName='custom-slider2'>
             <div className='bg-hanaNavGreen pt-6 px-7 rounded-2xl h-56 overflow-hidden'>
               <h1 className='text-white font-hanaBold whitespace-pre-line text-2xl'>{`취미 없인 못 살아!\n나의 취미를 찾는 방법`}</h1>
               <div className='flex text-white font-hanaMedium text-sm mt-2 justify-between'>
