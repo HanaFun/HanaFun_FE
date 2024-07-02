@@ -49,6 +49,18 @@ export class ApiClient {
 
   //---------reservation---------
 
+  // 개설 클래스 관리 (전체 목록)
+  async getHostLessonList() {
+    const response = await this.axiosInstance.request<
+      BaseResponseType<HostLessonListType>
+    >({
+      method: 'get',
+      url: '/reservation/my/opened',
+    });
+    console.log(response);
+    return response.data;
+  }
+
   //---------revenue---------
 
   // 임의 데이터. 마이페이지 홈 화면 호출

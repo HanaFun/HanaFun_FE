@@ -58,7 +58,7 @@ const MyPage = () => {
       <p className='font-hanaBold text-xl'>마이페이지</p>
       <UserInfo
         username={username}
-        hanaMoney={formatNumber(Number(point) || 0)}
+        hanaMoney={formatNumber(Number(point?.point) || 0)}
       />
       <div className='flex justify-between mt-5'>
         <div

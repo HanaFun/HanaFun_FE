@@ -14,7 +14,7 @@ import { QR } from '../../components/molecules/QR';
 import { AccountType } from '../../components/organisms/ChoiceAccount';
 import { RiQrScan2Line } from 'react-icons/ri';
 import { Lessondata } from '../search/LessonSearch';
-import { getCookie } from '../../utils/cookie';
+import { getCookie, setCookie } from '../../utils/cookie';
 import { useNavigate } from 'react-router-dom';
 import { QRScanner } from '../../components/molecules/QRScanner';
 
@@ -69,6 +69,11 @@ export const HanaFunMain = () => {
   const [showQr, setShowQr] = useState<boolean>(false);
   const [isScan, setIsScan] = useState(false);
   const [active, setActive] = useState<number | null>(null);
+
+  setCookie(
+    'token',
+    'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLsnbTrr7zsp4AiLCJ1c2VySWQiOjEsImlhdCI6MTcxOTg5ODgwNCwiZXhwIjoxNzE5OTAyNDA0fQ.Vxb7nX9-pWFhKhNXdnmxCjU0JFD99iSkDt7kdVeN0og'
+  );
 
   const [selectedAccount, setSelectedAccount] = useState<AccountType>({
     accountId: -1,
