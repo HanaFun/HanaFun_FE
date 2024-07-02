@@ -28,6 +28,29 @@ export class ApiClient {
   //   return response.data;
   // }
 
+  //---------users---------
+  // async postLogin(user: LoginReqType) {
+  //   const response = await this.axiosInstance.request<LoginType>({
+  //     method: 'post',
+  //     url: '/users/login',
+  //     data: user,
+  //   });
+  //   return response.data;
+  // }
+
+  // 사용자/호스트 api
+
+  // 하나머니 조회
+  async getPoint() {
+    const response = await this.axiosInstance.request<
+      BaseResponseType<PointType>
+    >({
+      method: 'post',
+      url: '/user/point',
+    });
+    return response.data;
+  }
+
   // 임의 데이터. 마이페이지 홈 화면 호출
   public static async getMyLesson(): Promise<MyLessonType> {
     const apiUrl = '/data/myLesson.json';
