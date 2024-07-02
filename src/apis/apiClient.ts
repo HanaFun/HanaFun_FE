@@ -6,8 +6,15 @@ import { LoginType } from '../types/user';
 import { AccountType } from '../types/account';
 import { accountApi } from './interfaces/accountApi';
 import { hostApi } from './interfaces/hostApi';
+import { categoryApi } from './interfaces/categoryApi';
+import { SearchLessonReqType, SearchLessonResType } from '../types/category';
+import {
+  CreateHostReqType,
+  CreateHostResType,
+  HostInfoType,
+} from '../types/host';
 
-export class ApiClient implements userApi, accountApi, hostApi {
+export class ApiClient implements userApi, accountApi, hostApi, categoryApi {
   private static instance: ApiClient;
   private axiosInstance: AxiosInstance;
 
@@ -54,6 +61,32 @@ export class ApiClient implements userApi, accountApi, hostApi {
   }
 
   // ------- host -------
+  async getSearchLessonAll(reqData: SearchLessonReqType) {
+    const response = await this.axiosInstance.request<
+      BaseResponseType<SearchLessonResType[]>
+    >({
+      method: 'get',
+      url: `/category/all?query=${reqData.query}&sort=${reqData.sort}`,
+    });
+    return response.data;
+  }
+
+  async getHostInfo() {
+    try {
+      const response = await this.axiosInstance.request<
+        BaseResponseType<HostInfoType>
+      >({
+        method: 'get',
+        url: '/host/info',
+      });
+      return response.data;
+    } catch (error: any) {
+      if (axios.isAxiosError(error)) throw error.response?.data;
+      else throw new Error('unexpected error');
+    }
+  }
+
+  // ------- category -------
   async postCreateHost(reqData: CreateHostReqType) {
     const response = await this.axiosInstance.request<
       BaseResponseType<CreateHostResType>

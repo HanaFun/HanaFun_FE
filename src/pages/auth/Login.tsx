@@ -39,7 +39,6 @@ export const Login = () => {
     },
     onError: (error: ErrorType) => {
       if (!error.isSuccess) {
-        // openModal('비밀번호를 다시 입력하세요.', closeModal);
         setIsFalse(true);
         setPassword({
           1: -1,

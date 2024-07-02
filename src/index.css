@@ -33,6 +33,11 @@
 .scroll::-webkit-scrollbar {
   display: none;
 }
+
+.one-item .slick-list {
+  width: 390px;
+}
+
 .custom-slider .slick-slide > div {
   padding: 0 5px;
 }
