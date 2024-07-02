@@ -39,6 +39,7 @@ const MyPage = () => {
     queryKey: ['point'],
     queryFn: async () => {
       const response = await ApiClient.getInstance().getPoint();
+      console.log('point success : ', point);
       return response.data;
     },
   });
@@ -51,8 +52,6 @@ const MyPage = () => {
     console.log('point error', point);
     return <ErrorPage />;
   }
-
-  console.log('point success : ', point);
 
   return (
     <div className='pt-6 px-5 pb-7'>

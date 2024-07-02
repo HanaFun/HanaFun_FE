@@ -12,44 +12,44 @@ export class ApiClient {
     this.axiosInstance = this.createAxiosInstance();
   }
 
-  // ------- mypage -------
-
-  // get lessonDetail
-
-  // public async getLessonDetails(): Promise<
-  //   ApiResponseType<LessonDetailType[]>
-  // > {
-  //   const response = await this.axiosInstance.request<
-  //     ApiResponseType<LessonDetailType[]>
-  //   >({
-  //     method: 'get',
-  //     url: '/lessonDetail.json',
-  //   });
-  //   return response.data;
-  // }
-
-  //---------users---------
-  // async postLogin(user: LoginReqType) {
-  //   const response = await this.axiosInstance.request<LoginType>({
-  //     method: 'post',
-  //     url: '/users/login',
-  //     data: user,
-  //   });
-  //   return response.data;
-  // }
-
-  // 사용자/호스트 api
+  //---------user---------
 
   // 하나머니 조회
   async getPoint() {
     const response = await this.axiosInstance.request<
       BaseResponseType<PointType>
     >({
-      method: 'post',
+      method: 'get',
       url: '/user/point',
     });
     return response.data;
   }
+
+  //---------host---------
+
+  //---------account---------
+
+  //---------transaction---------
+
+  //---------category---------
+
+  //---------lesson---------
+
+  // 클래스 상세
+  async getLessonDetail(lesson_id: number) {
+    const response = await this.axiosInstance.request<
+      BaseResponseType<LessonDetailType>
+    >({
+      method: 'get',
+      url: `/lesson/${lesson_id}`,
+    });
+    console.log(lesson_id);
+    return response.data;
+  }
+
+  //---------reservation---------
+
+  //---------revenue---------
 
   // 임의 데이터. 마이페이지 홈 화면 호출
   public static async getMyLesson(): Promise<MyLessonType> {
@@ -65,19 +65,6 @@ export class ApiClient {
     const response = await fetch(apiUrl);
     const data = await response.json();
     return data;
-  }
-
-  // 임의 데이터. 클래스 상세 정보 호출
-  public static async getLessonDetail(
-    lesson_id: number
-  ): Promise<LessonDetailType> {
-    const apiUrl = '/data/lessonDetail.json';
-    const response = await fetch(apiUrl);
-    const data = await response.json();
-    const lesssonDetail = data.find(
-      (lesson: LessonDetailType) => lesson.lesson_id === lesson_id
-    );
-    return lesssonDetail;
   }
 
   // 임의 데이터. 개설 클래스 목록 호출
