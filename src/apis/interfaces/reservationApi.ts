@@ -1,3 +1,7 @@
 export interface reservationApi {
-  getHostLessonList(): Promise<BaseResponseType<HostLessonListType>>;
+  getHostLessonList(): Promise<BaseResponseType<HostLessonType[]>>;
+
+  getHostLessonDetailList(
+    lesson_id: number
+  ): Promise<BaseResponseType<HostLessonDetailType[]>>;
 }

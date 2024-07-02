@@ -52,11 +52,24 @@ export class ApiClient {
   // 개설 클래스 관리 (전체 목록)
   async getHostLessonList() {
     const response = await this.axiosInstance.request<
-      BaseResponseType<HostLessonListType>
+      BaseResponseType<HostLessonType[]>
     >({
       method: 'get',
       url: '/reservation/my/opened',
     });
+    console.log(response);
+    return response.data;
+  }
+
+  // 개설 클래스 상세
+  async getHostLessonDetailList(lesson_id: number) {
+    const response = await this.axiosInstance.request<
+      BaseResponseType<HostLessonDetailType[]>
+    >({
+      method: 'get',
+      url: `/reservation/my/opened/${lesson_id}`,
+    });
+    console.log(lesson_id);
     console.log(response);
     return response.data;
   }
@@ -74,22 +87,6 @@ export class ApiClient {
   // 임의 데이터. 신청 클래스 목록 페이지 호출
   public static async getMyLessonAll(): Promise<LessonType[]> {
     const apiUrl = '/data/myLessonAll.json';
-    const response = await fetch(apiUrl);
-    const data = await response.json();
-    return data;
-  }
-
-  // 임의 데이터. 개설 클래스 목록 호출
-  public static async getHostLesson(): Promise<HostLessonInfoType[]> {
-    const apiUrl = '/data/hostLesson.json';
-    const response = await fetch(apiUrl);
-    const data = await response.json();
-    return data;
-  }
-
-  // 임의 데이터. 개설 클래스 상세정보 호출
-  public static async getHostLessonDetail(): Promise<HostLessonDetailType[]> {
-    const apiUrl = '/data/hostLessonDetail.json';
     const response = await fetch(apiUrl);
     const data = await response.json();
     return data;

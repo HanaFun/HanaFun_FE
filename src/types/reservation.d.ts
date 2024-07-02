@@ -1,9 +1,12 @@
 interface HostLessonType {
-  lesson_id: number;
+  lessonId: number;
   image: string;
   title: string;
 }
 
-interface HostLessonListType extends HostLessonType {
-  hostLesson: HostLessonType[];
+interface HostLessonDetailType {
+  lessondate_id: number;
+  date: string;
+  lesson_id: number;
+  title: string;
 }

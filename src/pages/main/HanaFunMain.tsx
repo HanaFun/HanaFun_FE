@@ -72,7 +72,7 @@ export const HanaFunMain = () => {
 
   setCookie(
     'token',
-    'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLsnbTrr7zsp4AiLCJ1c2VySWQiOjEsImlhdCI6MTcxOTg5ODgwNCwiZXhwIjoxNzE5OTAyNDA0fQ.Vxb7nX9-pWFhKhNXdnmxCjU0JFD99iSkDt7kdVeN0og'
+    'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLsnbTrr7zsp4AiLCJ1c2VySWQiOjEsImlhdCI6MTcxOTkwMjkxNCwiZXhwIjoxNzE5OTA2NTE0fQ.QxWJHeTy89xe1YZAFt05skPhn3dlieqNitJFF8AyycY'
   );
 
   const [selectedAccount, setSelectedAccount] = useState<AccountType>({

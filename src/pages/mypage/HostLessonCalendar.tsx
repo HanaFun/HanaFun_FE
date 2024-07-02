@@ -10,17 +10,19 @@ import { ApplicantList } from '../../components/organisms/ApplicantList';
 
 export const HostLessonCalendar = () => {
   const navigate = useNavigate();
-  // const { lesson_id } = useParams(); // 실제 사용 시 URL에서 lesson_id를 가져옴
-  const lesson_id = 1; // 임시로 설정한 값, 실제로는 useParams()로 가져옴
+  const { lesson_id } = useParams();
   const [selectedLesson, setSelectedLesson] = useState<HostLessonDetailType[]>(
     []
   );
   const [calendarData, setCalendarData] = useState<CalendarDataType[]>([]);
 
+  // 개설 클래스 상세 api
   const { data: hostLessonDetail } = useQuery({
     queryKey: ['hostLessonDetail'],
     queryFn: async () => {
-      const response = await ApiClient.getHostLessonDetail();
+      const response = await ApiClient.getInstance().getHostLessonDetailList(
+        Number(lesson_id)
+      );
       return response;
     },
   });
@@ -28,14 +30,15 @@ export const HostLessonCalendar = () => {
   const { data: lessonDetail } = useQuery({
     queryKey: ['lessonDetail', lesson_id],
     queryFn: async () => {
-      const response = await ApiClient.getLessonDetail(lesson_id);
+      const response = await ApiClient.getInstance().getLessonDetail(
+        Number(lesson_id)
+      );
       return response;
     },
-    enabled: !!lesson_id,
   });
 
   const fetchLessonDetail = async (lesson_id: number) => {
-    const response = await ApiClient.getLessonDetail(lesson_id);
+    const response = await ApiClient.getInstance().getLessonDetail(lesson_id);
     return response;
   };
 
@@ -47,7 +50,7 @@ export const HostLessonCalendar = () => {
 
   useEffect(() => {
     if (hostLessonDetail) {
-      const formattedData = hostLessonDetail.map(
+      const formattedData = hostLessonDetail.data?.map(
         (lesson: HostLessonDetailType) => ({
           lesson_id: lesson.lesson_id,
           date: lesson.date,
@@ -63,8 +66,8 @@ export const HostLessonCalendar = () => {
 
   useEffect(() => {
     if (lesson_id && hostLessonDetail) {
-      const selectedLessonDetail = hostLessonDetail.find(
-        (lesson: HostLessonDetailType) => lesson.lesson_id === lesson_id
+      const selectedLessonDetail = hostLessonDetail.data?.find(
+        (lesson: HostLessonDetailType) => lesson.lesson_id === Number(lesson_id)
       );
       if (selectedLessonDetail) {
         setSelectedLesson([selectedLessonDetail]);
@@ -75,13 +78,13 @@ export const HostLessonCalendar = () => {
   return (
     <div>
       <Topbar
-        title={lessonDetail ? lessonDetail.title : '클래스 이름'}
+        title={lessonDetail ? lessonDetail.data?.title : '클래스 이름'}
         onClick={() => navigate('/mypage/host')}
       />
       <MyCalendar
         data={calendarData || []}
         setSelectedLesson={(lessons: CalendarDataType[]) => {
-          const selectedLessons = hostLessonDetail.filter(
+          const selectedLessons = hostLessonDetail?.data?.filter(
             (lesson: HostLessonDetailType) =>
               lessons.some(
                 (selectedLesson) =>
@@ -99,7 +102,7 @@ export const HostLessonCalendar = () => {
         />
         <ApplicantList />
         <p className='font-hanaMedium text-xl mt-5 ml-1'>클래스 상세 정보</p>
-        <LessonDetail />
+        <LessonDetail lessonDetail={lessonDetail} />
       </div>
     </div>
   );
