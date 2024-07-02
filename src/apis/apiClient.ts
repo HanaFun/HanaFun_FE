@@ -1,10 +1,13 @@
 import axios, { AxiosInstance } from 'axios';
 import { API_BASE_URL } from './url';
 import { getCookie } from '../utils/cookie';
+import { userApi } from './interfaces/userApi';
+import { LoginType } from '../types/user';
+import { AccountType } from '../types/account';
+import { accountApi } from './interfaces/accountApi';
+import { hostApi } from './interfaces/hostApi';
 
-export class ApiClient {
-  // implements
-  //   usersApi,
+export class ApiClient implements userApi, accountApi, hostApi {
   private static instance: ApiClient;
   private axiosInstance: AxiosInstance;
 
@@ -12,7 +15,57 @@ export class ApiClient {
     this.axiosInstance = this.createAxiosInstance();
   }
 
-  //---------user---------
+  // ------- user -------
+  async postLogin(password: string) {
+    try {
+      const response = await this.axiosInstance.request<
+        BaseResponseType<LoginType>
+      >({
+        method: 'post',
+        url: '/user/login',
+        data: { password: password },
+      });
+      return response.data;
+    } catch (error: any) {
+      if (axios.isAxiosError(error)) throw error.response?.data;
+      else throw new Error('unexpected error');
+    }
+  }
+
+  async getIsHost() {
+    const response = await this.axiosInstance.request<
+      BaseResponseType<{ isHost: boolean }>
+    >({
+      method: 'get',
+      url: '/user/ishost',
+    });
+    return response.data;
+  }
+
+  // ------- account -------
+  async getAccountList() {
+    const response = await this.axiosInstance.request<
+      BaseResponseType<AccountType[]>
+    >({
+      method: 'get',
+      url: '/account/list',
+    });
+    return response.data;
+  }
+
+  // ------- host -------
+  async postCreateHost(reqData: CreateHostReqType) {
+    const response = await this.axiosInstance.request<
+      BaseResponseType<CreateHostResType>
+    >({
+      method: 'post',
+      url: '/host/create',
+      data: reqData,
+    });
+    return response.data;
+  }
+
+  // ------- mypage -------
 
   // 하나머니 조회
   async getPoint() {
@@ -99,16 +152,6 @@ export class ApiClient {
     const data = await response.json();
     return data;
   }
-
-  //---------users---------
-  // async postLogin(user: LoginReqType) {
-  //   const response = await this.axiosInstance.request<LoginType>({
-  //     method: 'post',
-  //     url: '/users/login',
-  //     data: user,
-  //   });
-  //   return response.data;
-  // }
 
   static getInstance(): ApiClient {
     return this.instance || (this.instance = new this());
