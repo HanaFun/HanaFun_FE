@@ -1,5 +1,5 @@
 interface LessonListProps {
-  selectedLesson: CommonLessonType[];
+  selectedLesson: HostLessonDetailType[];
   handleLessonDetail: (lesson_id: number) => void;
 }
 

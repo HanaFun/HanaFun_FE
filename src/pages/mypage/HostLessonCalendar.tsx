@@ -10,7 +10,7 @@ import { ApplicantList } from '../../components/organisms/ApplicantList';
 
 export const HostLessonCalendar = () => {
   const navigate = useNavigate();
-  const { lesson_id } = useParams();
+  const { lesson_id } = useParams<{ lesson_id: string }>();
   const [selectedLesson, setSelectedLesson] = useState<HostLessonDetailType[]>(
     []
   );
@@ -18,7 +18,7 @@ export const HostLessonCalendar = () => {
 
   // 개설 클래스 상세 api
   const { data: hostLessonDetail } = useQuery({
-    queryKey: ['hostLessonDetail'],
+    queryKey: ['hostLessonDetail', lesson_id],
     queryFn: async () => {
       const response = await ApiClient.getInstance().getHostLessonDetailList(
         Number(lesson_id)
@@ -26,7 +26,9 @@ export const HostLessonCalendar = () => {
       return response;
     },
   });
+  console.log('클래스의 일정은 : ', hostLessonDetail?.data);
 
+  // 클래스 상세 api
   const { data: lessonDetail } = useQuery({
     queryKey: ['lessonDetail', lesson_id],
     queryFn: async () => {
@@ -37,20 +39,9 @@ export const HostLessonCalendar = () => {
     },
   });
 
-  const fetchLessonDetail = async (lesson_id: number) => {
-    const response = await ApiClient.getInstance().getLessonDetail(lesson_id);
-    return response;
-  };
-
-  const handleLessonDetail = async (lesson_id: number) => {
-    const lessonDetail = await fetchLessonDetail(lesson_id);
-    console.log('Lesson Detail:', lessonDetail);
-    console.log('lessondate_id: ', selectedLesson[lesson_id - 1].lessondate_id);
-  };
-
   useEffect(() => {
-    if (hostLessonDetail) {
-      const formattedData = hostLessonDetail.data?.map(
+    if (hostLessonDetail?.data) {
+      const formattedData = hostLessonDetail.data.map(
         (lesson: HostLessonDetailType) => ({
           lesson_id: lesson.lesson_id,
           date: lesson.date,
@@ -61,12 +52,8 @@ export const HostLessonCalendar = () => {
   }, [hostLessonDetail]);
 
   useEffect(() => {
-    console.log('Selected Lesson:', selectedLesson);
-  }, [selectedLesson]);
-
-  useEffect(() => {
-    if (lesson_id && hostLessonDetail) {
-      const selectedLessonDetail = hostLessonDetail.data?.find(
+    if (lesson_id && hostLessonDetail?.data) {
+      const selectedLessonDetail = hostLessonDetail.data.find(
         (lesson: HostLessonDetailType) => lesson.lesson_id === Number(lesson_id)
       );
       if (selectedLessonDetail) {
@@ -75,24 +62,39 @@ export const HostLessonCalendar = () => {
     }
   }, [lesson_id, hostLessonDetail]);
 
+  const handleLessonDetail = (lesson_id: number) => {
+    const selectedLessonDetail = hostLessonDetail?.data?.find(
+      (lesson: HostLessonDetailType) => lesson.lesson_id === lesson_id
+    );
+    if (selectedLessonDetail) {
+      setSelectedLesson([selectedLessonDetail]);
+    }
+  };
+
+  const setUniqueSelectedLessons = (lessons: CalendarDataType[]) => {
+    const selectedLessons = hostLessonDetail?.data?.filter(
+      (lesson: HostLessonDetailType) =>
+        lessons.some(
+          (selectedLesson) => selectedLesson.lesson_id === lesson.lesson_id
+        )
+    );
+    // Remove duplicates by converting to a Set and then back to an array
+    const uniqueSelectedLessons = Array.from(
+      new Set(selectedLessons?.map((lesson) => lesson.lesson_id))
+    ).map((id) => selectedLessons?.find((lesson) => lesson.lesson_id === id)!);
+
+    setSelectedLesson(uniqueSelectedLessons || []);
+  };
+
   return (
     <div>
       <Topbar
-        title={lessonDetail ? lessonDetail.data?.title : '클래스 이름'}
+        title={lessonDetail ? lessonDetail.data?.title : '클래스명'}
         onClick={() => navigate('/mypage/host')}
       />
       <MyCalendar
-        data={calendarData || []}
-        setSelectedLesson={(lessons: CalendarDataType[]) => {
-          const selectedLessons = hostLessonDetail?.data?.filter(
-            (lesson: HostLessonDetailType) =>
-              lessons.some(
-                (selectedLesson) =>
-                  selectedLesson.lesson_id === lesson.lesson_id
-              )
-          );
-          setSelectedLesson(selectedLessons);
-        }}
+        data={calendarData}
+        setSelectedLesson={setUniqueSelectedLessons}
       />
       <div className='m-5'>
         <p className='font-hanaMedium text-xl ml-1'>나의 일정 모아보기</p>
