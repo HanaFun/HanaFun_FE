@@ -1,4 +1,4 @@
-import { AccountType } from '../components/organisms/ChoiceAccount';
+import { AccountType } from './account';
 import { LessonType } from './lesson';
 
 type CreateHostReqType = {

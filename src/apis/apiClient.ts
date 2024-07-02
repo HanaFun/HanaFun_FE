@@ -2,7 +2,7 @@ import axios, { AxiosInstance } from 'axios';
 import { API_BASE_URL } from './url';
 import { getCookie } from '../utils/cookie';
 import { userApi } from './interfaces/userApi';
-import { LoginType } from '../types/user';
+import { LoginType, PointType } from '../types/user';
 import { AccountType, CheckPwReqType, CheckPwResType } from '../types/account';
 import { accountApi } from './interfaces/accountApi';
 import { hostApi } from './interfaces/hostApi';
@@ -13,8 +13,13 @@ import {
   CreateHostResType,
   HostInfoType,
 } from '../types/host';
+import { LessonDetailType } from '../types/lesson';
+import { transactionApi } from './interfaces/transactionApi';
+import { QrPayReqType } from '../types/transaction';
 
-export class ApiClient implements userApi, accountApi, hostApi, categoryApi {
+export class ApiClient
+  implements userApi, accountApi, hostApi, categoryApi, transactionApi
+{
   private static instance: ApiClient;
   private axiosInstance: AxiosInstance;
 
@@ -127,6 +132,18 @@ export class ApiClient implements userApi, accountApi, hostApi, categoryApi {
   //---------account---------
 
   //---------transaction---------
+  async postQrPay(reqData: QrPayReqType) {
+    const response = await this.axiosInstance.request<
+      BaseResponseType<{
+        transactionId: number;
+      }>
+    >({
+      method: 'post',
+      url: '/transaction/qr',
+      data: reqData,
+    });
+    return response.data;
+  }
 
   //---------category---------
 

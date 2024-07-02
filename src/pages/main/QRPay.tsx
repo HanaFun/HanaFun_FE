@@ -7,12 +7,13 @@ import { ChoiceAccount } from '../../components/organisms/ChoiceAccount';
 import { InputMoney } from '../../components/Atom/InputMoney';
 import { ChoiceInput } from '../../components/molecules/ChoiceInput';
 import { CompleteSend } from '../../components/organisms/CompleteSend';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { ApiClient } from '../../apis/apiClient';
 import { ModalBottomContainer } from '../../components/organisms/ModalBottomContainer';
 import { useModal } from '../../context/ModalContext';
 import { LessonType } from '../../types/lesson';
 import { Loading } from '../Loading';
+import { QrPayReqType } from '../../types/transaction';
 
 export const QRPay = () => {
   const location = useLocation();
@@ -29,11 +30,13 @@ export const QRPay = () => {
   const [money, setMoney] = useState<number>(-1);
   const [isSend, setIsSend] = useState<boolean>(false);
 
-  const { data: hostLessonDetail } = useQuery({
-    queryKey: ['hostLessonDetail'],
-    queryFn: async () => {
-      const response = await ApiClient.getHostLessonDetail();
-      return response;
+  const { mutate: postQrPay } = useMutation({
+    mutationFn: (reqData: QrPayReqType) => {
+      const res = ApiClient.getInstance().postQrPay(reqData);
+      return res;
+    },
+    onSuccess: (data) => {
+      if (data.isSuccess && data.data?.transactionId) setIsSend(true);
     },
   });
 
@@ -55,42 +58,58 @@ export const QRPay = () => {
 
   const checkValid = () => {
     if (
-      selectedLesson &&
-      selectedLessonDate &&
+      userInfo.accountId &&
+      hostInfo?.data?.account.accountId &&
+      selectedLesson?.lessonId &&
+      selectedLessonDate?.lessondateId &&
       money > 0 &&
       money <= userInfo.balance
     )
       setIsBtnActive(true);
     else setIsBtnActive(false);
   };
+
   const handleSendPayment = () => {
-    console.log('출금계좌ID>>', userInfo.accountId);
-    console.log('입금계좌ID>>', 1);
-    console.log('클래스 ID>>', selectedLesson?.lessonId);
-    console.log('클래스일정ID>>', selectedLessonDate?.lessondate_id);
-    console.log('지불금액>>', money);
-    // setIsSend(true);
+    if (hostInfo && hostInfo.data && selectedLesson && selectedLessonDate) {
+      postQrPay({
+        withdrawId: userInfo.accountId,
+        depositId: hostInfo.data.account.accountId,
+        lessonId: selectedLesson.lessonId,
+        lessondateId: selectedLessonDate.lessondateId,
+        payment: money,
+      });
+    }
   };
 
   useEffect(() => {
     checkValid();
-  }, [money, selectedLesson?.lessonId, selectedLessonDate?.lessondate_id]);
+  }, [money, selectedLesson?.lessonId, selectedLessonDate?.lessondateId]);
 
   const {
     data: hostInfo,
     isError: getHostInfoError,
     isLoading: getHostInfoLoading,
   } = useQuery({
-    queryKey: ['hostLessons'],
+    queryKey: ['hostLessons', userInfo.accountId],
     queryFn: async () => {
       const response = await ApiClient.getInstance().getHostInfo();
       return response;
     },
   });
 
-  if (getHostInfoLoading) {
-    return <Loading />;
-  }
+  const { data: hostLessonDetail } = useQuery({
+    queryKey: ['hostLessonDetail', selectedLesson?.lessonId],
+    queryFn: async () => {
+      if (!selectedLesson || !selectedLesson.lessonId) return;
+      const response = await ApiClient.getInstance().getHostLessonDetailList(
+        selectedLesson.lessonId
+      );
+      return response;
+    },
+    enabled: !!selectedLesson && !!selectedLesson.lessonId,
+  });
+
+  if (getHostInfoLoading) return <Loading />;
 
   if (getHostInfoError) {
     openModal('호스트가 아닙니다. 호스트 등록을 먼저 해주세요.', closeModal);
@@ -132,7 +151,7 @@ export const QRPay = () => {
           <div className='w-full'>
             <hr />
             <div className='max-h-60 overflow-y-auto scrollbar-hide px-6 py-2'>
-              {hostLessonDetail.map((date, idx) => (
+              {hostLessonDetail.data?.map((date, idx) => (
                 <div key={idx}>
                   <p
                     className='py-2 font-hanaRegular text-base cursor-pointer pl-1'
@@ -140,7 +159,7 @@ export const QRPay = () => {
                   >
                     {date.date}
                   </p>
-                  {idx !== hostLessonDetail.length - 1 && <hr />}
+                  {idx + 1 !== hostLessonDetail.data?.length && <hr />}
                 </div>
               ))}
             </div>
@@ -148,7 +167,7 @@ export const QRPay = () => {
         </ModalBottomContainer>
       )}
       <Topbar title='QR결제' onClick={() => navigate('/')} />
-      {hostInfo && (
+      {hostInfo && hostInfo.data && (
         <>
           {!isSend ? (
             <>

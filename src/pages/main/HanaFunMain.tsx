@@ -234,7 +234,7 @@ export const HanaFunMain = () => {
 
         <div className='mt-8'>
           <h1 className='font-hanaBold text-xl mb-1.5'>인기클래스</h1>
-          <div className='flex gap-2.5 overflow-x-auto scroll'>
+          <div className='flex gap-2.5 overflow-x-scroll scrollbar-hide'>
             {popularLessonList?.data &&
               popularLessonList.data.map((item, index) => (
                 <PopularLessonItem
