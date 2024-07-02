@@ -65,10 +65,10 @@ const infoCardSliderSettings = {
 
 export const HanaFunMain = () => {
   const navigate = useNavigate();
-  const [showDropdown, setShowDropdown] = useState<boolean>(false);
   const [showKeypad, setShowKeypad] = useState<boolean>(false);
   const [showQr, setShowQr] = useState<boolean>(false);
   const [isScan, setIsScan] = useState(false);
+  const [active, setActive] = useState<number | null>(null);
 
   const [selectedAccount, setSelectedAccount] = useState<AccountType>({
     accountId: -1,
@@ -81,12 +81,12 @@ export const HanaFunMain = () => {
     console.log('비밀번호>>', password);
     console.log('로그인');
     setShowKeypad(false);
-    setShowDropdown(false);
+    setActive(null);
     setShowQr(true);
   };
 
-  const clickedAccount = (account: AccountType) => {
-    setShowDropdown((showDropdown) => !showDropdown);
+  const clickedAccount = (account: AccountType, index: number) => {
+    handleModalOpen(index);
     setSelectedAccount({
       accountId: account.accountId,
       accountNumber: account.accountNumber,
@@ -95,10 +95,28 @@ export const HanaFunMain = () => {
     });
   };
 
+  const handleModalOpen = (index: number) => {
+    setActive(active === index ? null : index);
+  };
+
   // useEffect(() => {
   //   const token = getCookie('token');
   //   if (!token) navigate('/hana');
   // }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (!target.closest('.lesson-card') && active !== null) {
+        setActive(null);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [active]);
 
   return (
     <>
@@ -108,7 +126,7 @@ export const HanaFunMain = () => {
           handleClickedPassword={(pw: string) => sendAccountPassword(pw)}
           onClose={() => {
             setShowKeypad(false);
-            setShowDropdown(false);
+            setActive(null);
           }}
         />
       )}
@@ -137,12 +155,12 @@ export const HanaFunMain = () => {
 
         <div className='mt-6 flex items-center justify-center'>
           <Slide settings={accountSliderSettings} cssName='custom-slider'>
-            {userDummyData.accounts.map((account) => (
+            {userDummyData.accounts.map((account, index) => (
               <div
                 key={account.accountId}
                 className='relative w-full bg-white rounded-2xl py-5 px-7 font-hanaBold'
               >
-                <div className='flex items-center justify-between'>
+                <div className='lesson-card flex items-center justify-between'>
                   <span className='text-black text-lg'>
                     {account.accountName}
                   </span>
@@ -150,9 +168,9 @@ export const HanaFunMain = () => {
                     color='#B5B5B5'
                     size={16}
                     className='rotate-90 cursor-pointer'
-                    onClick={() => clickedAccount(account)}
+                    onClick={() => clickedAccount(account, index)}
                   />
-                  {showDropdown && (
+                  {active === index && (
                     <div className='absolute right-0 mr-11'>
                       <DropdownSingle
                         image='/images/qr.svg'
