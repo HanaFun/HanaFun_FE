@@ -5,3 +5,7 @@ export type QrPayReqType = {
   lessondateId: number;
   payment: number;
 };
+
+interface PaybackReqType {
+  reservationId: number;
+}

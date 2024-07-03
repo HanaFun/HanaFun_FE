@@ -1,6 +1,6 @@
 interface LessonListProps {
-  selectedLesson: HostLessonDetailType[];
-  handleLessonDetail: (lesson_id: number) => void;
+  selectedLesson: HostLessonDetailType[] | MyScheduleType[];
+  handleLessonDetail: (lessonId: number) => void;
 }
 
 export const LessonList = ({
@@ -12,9 +12,9 @@ export const LessonList = ({
       {selectedLesson.length > 0 ? (
         selectedLesson.map((lesson, idx) => (
           <p
-            key={lesson.lesson_id || idx}
+            key={idx}
             className='font-hanaRegular text-base cursor-pointer'
-            onClick={() => handleLessonDetail(lesson.lesson_id)}
+            onClick={() => handleLessonDetail(lesson.lessonId)}
           >
             {lesson.title}
           </p>

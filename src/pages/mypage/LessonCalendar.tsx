@@ -11,21 +11,30 @@ import { ErrorPage } from '../ErrorPage';
 
 export const LessonCalendar = () => {
   const navigate = useNavigate();
+  const currDate = new Date();
+  const currYear = Number(currDate.getFullYear());
+  const currMonth = Number(currDate.getMonth());
 
-  const [selectedLesson, setSelectedLesson] = useState<LessonType[]>([]);
+  const [selectedLesson, setSelectedLesson] = useState<MyScheduleType[]>([]);
   const [selectedLessonId, setSelectedLessonId] = useState<number | null>(null);
   const [calendarData, setCalendarData] = useState<CalendarDataType[]>([]);
 
+  // 나의 신청 클래스 api 호출
   const {
-    data: allLessons,
+    data: mySchedule,
     isLoading: isLoadingLessons,
     error: errorLessons,
   } = useQuery({
-    queryKey: ['allLessons'],
+    queryKey: ['mySchedule', currYear, currMonth],
     queryFn: async () => {
-      const response = await ApiClient.getMyLessonAll();
-      return response;
+      const reqData = {
+        year: currYear,
+        month: currMonth,
+      };
+      const response = await ApiClient.getInstance().getMySchedule(reqData);
+      return response.data;
     },
+    retry: 1,
   });
 
   // lesson 상세 정보 api 호출
@@ -42,23 +51,24 @@ export const LessonCalendar = () => {
       return response;
     },
     enabled: selectedLessonId !== null,
+    retry: 1,
   });
 
   useEffect(() => {
-    if (allLessons) {
-      const formattedData = allLessons.map((lesson: LessonType) => ({
-        lesson_id: lesson.lesson_id,
+    if (mySchedule) {
+      const formattedData = mySchedule.map((lesson: MyScheduleType) => ({
+        lesson_id: lesson.lessonId,
         date: lesson.date,
       }));
       setCalendarData(formattedData);
     }
-  }, [allLessons]);
+  }, [mySchedule]);
 
-  if (isLoadingLessons) {
+  if (isLoadingLessons || isLoadingDetail) {
     return <Loading />;
   }
 
-  if (errorLessons) {
+  if (errorLessons || errorDetail) {
     return <ErrorPage />;
   }
 
@@ -68,9 +78,9 @@ export const LessonCalendar = () => {
       <MyCalendar
         data={calendarData || []}
         setSelectedLesson={(lessons: CalendarDataType[]) => {
-          const selectedLessons = allLessons?.filter((lesson: LessonType) =>
+          const selectedLessons = mySchedule?.filter((lesson: MyScheduleType) =>
             lessons.some(
-              (selectedLesson) => selectedLesson.lesson_id === lesson.lesson_id
+              (selectedLesson) => selectedLesson.lesson_id === lesson.lessonId
             )
           );
           setSelectedLesson(selectedLessons || []);
@@ -80,8 +90,8 @@ export const LessonCalendar = () => {
         <p className='font-hanaMedium text-xl ml-1'>나의 일정 모아보기</p>
         <LessonList
           selectedLesson={selectedLesson}
-          handleLessonDetail={(lesson_id: number) =>
-            setSelectedLessonId(lesson_id)
+          handleLessonDetail={(lessonId: number) =>
+            setSelectedLessonId(lessonId)
           }
         />
         <p className='font-hanaMedium text-xl mt-5 ml-1'>클래스 상세 정보</p>

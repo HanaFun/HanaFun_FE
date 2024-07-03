@@ -13,9 +13,8 @@ import {
   CreateHostResType,
   HostInfoType,
 } from '../types/host';
-import { LessonDetailType } from '../types/lesson';
 import { transactionApi } from './interfaces/transactionApi';
-import { QrPayReqType } from '../types/transaction';
+import { PaybackReqType, QrPayReqType } from '../types/transaction';
 
 export class ApiClient
   implements userApi, accountApi, hostApi, categoryApi, transactionApi
@@ -145,6 +144,20 @@ export class ApiClient
     return response.data;
   }
 
+  // 환불
+  async postPayback(reqData: PaybackReqType) {
+    const response = await this.axiosInstance.request<
+      BaseResponseType<{
+        transactionId: number;
+      }>
+    >({
+      method: 'post',
+      url: '/transaction/payback',
+      data: reqData,
+    });
+    return response.data;
+  }
+
   //---------category---------
 
   //---------lesson---------
@@ -162,6 +175,50 @@ export class ApiClient
   }
 
   //---------reservation---------
+
+  // 마이페이지 출력
+  async getMyLesson() {
+    const response = await this.axiosInstance.request<
+      BaseResponseType<MyLessonType>
+    >({
+      method: 'get',
+      url: '/reservation/my',
+    });
+    return response.data;
+  }
+
+  // 나의 신청 클래스 출력
+  async getMyLessonAll() {
+    const response = await this.axiosInstance.request<
+      BaseResponseType<LessonType[]>
+    >({
+      method: 'get',
+      url: '/reservation/my/lessons',
+    });
+    console.log('신청클래스 싹다', response.data);
+    return response.data;
+  }
+
+  // 클래스 예약 취소
+  async cancelLesson(reservationId: CancelLessonReqType) {
+    const response = await this.axiosInstance.request<CancleLessonResType>({
+      method: 'post',
+      url: '/reservation/cancel',
+      data: reservationId,
+    });
+    return response.data;
+  }
+
+  // 신청 클래스 일정
+  async getMySchedule(reqData: MyScheduleReqType) {
+    const response = await this.axiosInstance.request<
+      BaseResponseType<MyScheduleType[]>
+    >({
+      method: 'get',
+      url: `/reservation/my/schedule?year=${reqData.year}&month=${reqData.month}`,
+    });
+    return response.data;
+  }
 
   // 개설 클래스 관리 (전체 목록)
   async getHostLessonList() {
@@ -188,23 +245,21 @@ export class ApiClient
     return response.data;
   }
 
+  // 예약자 정보
+  async peopleList(lessondateId: PeopleListReqType) {
+    console.log('전달된 lessondate_id: ', lessondateId);
+    const response = await this.axiosInstance.request<
+      BaseResponseType<PeopleListType>
+    >({
+      method: 'post',
+      url: '/reservation/my/opened/people',
+      data: lessondateId,
+    });
+
+    return response.data;
+  }
+
   //---------revenue---------
-
-  // 임의 데이터. 마이페이지 홈 화면 호출
-  public static async getMyLesson(): Promise<MyLessonType> {
-    const apiUrl = '/data/myLesson.json';
-    const response = await fetch(apiUrl);
-    const data = await response.json();
-    return data;
-  }
-
-  // 임의 데이터. 신청 클래스 목록 페이지 호출
-  public static async getMyLessonAll(): Promise<LessonType[]> {
-    const apiUrl = '/data/myLessonAll.json';
-    const response = await fetch(apiUrl);
-    const data = await response.json();
-    return data;
-  }
 
   // 임의 데이터. 클래스 년/월 별 매출액
   public static async getMonthSales(): Promise<MonthSalesType[]> {

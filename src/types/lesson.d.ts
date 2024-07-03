@@ -1,7 +1,7 @@
-export type LessonType = {
+interface LessonType {
   lessonId: number;
   title: string;
-};
+}
 
 interface LessonDetailType {
   lesson_id: number;
@@ -12,5 +12,5 @@ interface LessonDetailType {
   location: string;
   materials: string;
   capacity: number;
-  category_name: string;
+  categoryName: string;
 }
