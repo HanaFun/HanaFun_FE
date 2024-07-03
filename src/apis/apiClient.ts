@@ -201,7 +201,7 @@ export class ApiClient
 
   // 클래스 예약 취소
   async cancelLesson(reservationId: CancelLessonReqType) {
-    const response = await this.axiosInstance.request<BaseResponseType<{}>>({
+    const response = await this.axiosInstance.request<CancleLessonResType>({
       method: 'post',
       url: '/reservation/cancel',
       data: reservationId,
@@ -215,8 +215,7 @@ export class ApiClient
       BaseResponseType<MyScheduleType[]>
     >({
       method: 'get',
-      url: '/reservation/my/schedule',
-      data: reqData,
+      url: `/reservation/my/schedule?year=${reqData.year}&month=${reqData.month}`,
     });
     return response.data;
   }

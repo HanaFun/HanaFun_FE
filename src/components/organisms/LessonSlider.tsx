@@ -20,7 +20,6 @@ export const LessonSlider = ({ data, show, option }: IProps) => {
   const queryClient = useQueryClient();
 
   const cancelLesson = async (reservationId: number) => {
-    console.log('여기', reservationId);
     try {
       const paybackResponse = await ApiClient.getInstance().postPayback({
         reservationId: reservationId,
@@ -30,10 +29,10 @@ export const LessonSlider = ({ data, show, option }: IProps) => {
 
       if (paybackResponse.isSuccess) {
         const cancelResponse = await ApiClient.getInstance().cancelLesson({
-          reservationId,
+          reservationId: reservationId,
         });
-
-        if (cancelResponse.isSuccess) {
+        console.log('cancleResponse', cancelResponse);
+        if (cancelResponse.success) {
           openModal('예약이 취소되었습니다', () =>
             navigate('/mypage/my-lesson-list')
           );

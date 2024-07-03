@@ -14,7 +14,7 @@ interface HostLessonDetailType extends MyScheduleType {
 interface LessonType {
   reservationId: number;
   lessondate_id: number;
-  lesson_id: number;
+  lessonId: number;
   image: string;
   title: string;
   location: string;
@@ -29,7 +29,7 @@ interface MyLessonType extends LessonType {
 
 interface MyScheduleType {
   reservation_id: number;
-  lesson_id: number;
+  lessonId: number;
   date: string;
   title: string;
 }
@@ -57,4 +57,9 @@ interface PeopleListType extends PeopleType {
 
 interface PeopleListReqType {
   lessondateId: number;
+}
+
+interface CancleLessonResType {
+  message: string;
+  success: boolean;
 }

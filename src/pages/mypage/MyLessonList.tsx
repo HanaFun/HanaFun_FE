@@ -41,7 +41,7 @@ export const MyLessonList = () => {
         </div>
         <div className='mt-5'>
           <p>수강한 클래스</p>
-          <LessonSlider data={prevLesson} show={true} option='double' />
+          <LessonSlider data={prevLesson} show={true} option='single' />
         </div>
       </div>
     </div>

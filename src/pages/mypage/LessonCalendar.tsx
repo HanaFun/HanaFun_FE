@@ -57,7 +57,7 @@ export const LessonCalendar = () => {
   useEffect(() => {
     if (mySchedule) {
       const formattedData = mySchedule.map((lesson: MyScheduleType) => ({
-        lesson_id: lesson.lesson_id,
+        lesson_id: lesson.lessonId,
         date: lesson.date,
       }));
       setCalendarData(formattedData);
@@ -80,7 +80,7 @@ export const LessonCalendar = () => {
         setSelectedLesson={(lessons: CalendarDataType[]) => {
           const selectedLessons = mySchedule?.filter((lesson: MyScheduleType) =>
             lessons.some(
-              (selectedLesson) => selectedLesson.lesson_id === lesson.lesson_id
+              (selectedLesson) => selectedLesson.lesson_id === lesson.lessonId
             )
           );
           setSelectedLesson(selectedLessons || []);
@@ -90,8 +90,8 @@ export const LessonCalendar = () => {
         <p className='font-hanaMedium text-xl ml-1'>나의 일정 모아보기</p>
         <LessonList
           selectedLesson={selectedLesson}
-          handleLessonDetail={(lesson_id: number) =>
-            setSelectedLessonId(lesson_id)
+          handleLessonDetail={(lessonId: number) =>
+            setSelectedLessonId(lessonId)
           }
         />
         <p className='font-hanaMedium text-xl mt-5 ml-1'>클래스 상세 정보</p>
