@@ -61,6 +61,17 @@ export class ApiClient {
     return response.data;
   }
 
+  // 나의 신청 클래스 출력
+  async getMyLessonAll() {
+    const response = await this.axiosInstance.request<
+      BaseResponseType<LessonType[]>
+    >({
+      method: 'get',
+      url: '/reservation/my/lessons',
+    });
+    return response.data;
+  }
+
   // 개설 클래스 관리 (전체 목록)
   async getHostLessonList() {
     const response = await this.axiosInstance.request<
@@ -87,14 +98,6 @@ export class ApiClient {
   }
 
   //---------revenue---------
-
-  // 임의 데이터. 신청 클래스 목록 페이지 호출
-  public static async getMyLessonAll(): Promise<LessonType[]> {
-    const apiUrl = '/data/myLessonAll.json';
-    const response = await fetch(apiUrl);
-    const data = await response.json();
-    return data;
-  }
 
   // 임의 데이터. 클래스 년/월 별 매출액
   public static async getMonthSales(): Promise<MonthSalesType[]> {

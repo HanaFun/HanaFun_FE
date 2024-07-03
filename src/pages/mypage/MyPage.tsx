@@ -21,7 +21,11 @@ const MyPage = () => {
   };
 
   // 마이페이지 출력 api
-  const { data: myLessons } = useQuery({
+  const {
+    data: myLessons,
+    isLoading: listLoading,
+    error: listError,
+  } = useQuery({
     queryKey: ['myLessons'],
     queryFn: async () => {
       const response = await ApiClient.getInstance().getMyLesson();
@@ -29,13 +33,13 @@ const MyPage = () => {
       return response;
     },
   });
-  const lessons = myLessons?.data;
+  const lessons = myLessons?.data?.lessons;
 
   // 하나머니 호출 api
   const {
     data: point,
-    isLoading,
-    error,
+    isLoading: moneyLoading,
+    error: moneyError,
   } = useQuery({
     queryKey: ['point'],
     queryFn: async () => {
@@ -44,11 +48,11 @@ const MyPage = () => {
     },
   });
 
-  if (isLoading) {
+  if (listLoading || moneyLoading) {
     return <Loading />;
   }
 
-  if (error) {
+  if (listError || moneyError) {
     console.log('point error', point);
     return <ErrorPage />;
   }

@@ -11,7 +11,7 @@ interface HostLessonDetailType {
   title: string;
 }
 
-interface LessonType extends CommonLessonType {
+interface LessonType {
   reservation_id: number;
   lessondate_id: number;
   lesson_id: number;

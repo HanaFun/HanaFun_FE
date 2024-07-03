@@ -16,6 +16,7 @@ export const LessonCalendar = () => {
   const [selectedLessonId, setSelectedLessonId] = useState<number | null>(null);
   const [calendarData, setCalendarData] = useState<CalendarDataType[]>([]);
 
+  // 나의 신청 클래스 api 호출
   const {
     data: allLessons,
     isLoading: isLoadingLessons,
@@ -23,9 +24,10 @@ export const LessonCalendar = () => {
   } = useQuery({
     queryKey: ['allLessons'],
     queryFn: async () => {
-      const response = await ApiClient.getMyLessonAll();
-      return response;
+      const response = await ApiClient.getInstance().getMyLessonAll();
+      return response.data;
     },
+    retry: 1,
   });
 
   // lesson 상세 정보 api 호출
@@ -54,11 +56,11 @@ export const LessonCalendar = () => {
     }
   }, [allLessons]);
 
-  if (isLoadingLessons) {
+  if (isLoadingLessons || isLoadingDetail) {
     return <Loading />;
   }
 
-  if (errorLessons) {
+  if (errorLessons || errorDetail) {
     return <ErrorPage />;
   }
 
