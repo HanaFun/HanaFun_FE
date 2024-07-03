@@ -66,7 +66,7 @@ export const LessonSlider = ({ data, show, option }: IProps) => {
   }, [activeCard]);
 
   return (
-    <div className='mt-5 pb-1 overflow-x-scroll whitespace-nowrap scrollbar-hide'>
+    <div className='mt-5 pb-1 h-40 overflow-x-scroll whitespace-nowrap scrollbar-hide'>
       {data?.map((myLesson, index) => (
         <div key={index} className='inline-block relative'>
           <div className='lesson-card'>
