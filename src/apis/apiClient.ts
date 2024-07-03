@@ -11,7 +11,6 @@ import {
   HostInfoType,
 } from '../types/host';
 import { transactionApi } from './interfaces/transactionApi';
-import { PaybackReqType, QrPayReqType } from '../types/transaction';
 
 export class ApiClient
   implements userApi, accountApi, hostApi, categoryApi, transactionApi

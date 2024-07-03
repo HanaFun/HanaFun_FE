@@ -1,5 +1,3 @@
-import { PaybackReqType, QrPayReqType } from '../../types/transaction';
-
 export interface transactionApi {
   postQrPay(reqData: QrPayReqType): Promise<BaseResponseType<PayResType>>;
 
