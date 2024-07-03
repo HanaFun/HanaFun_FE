@@ -17,9 +17,14 @@ import {
   CreateHostResType,
   HostInfoType,
 } from '../types/host';
-import { LessonDetailType } from '../types/lesson';
+import { LessonDateType, LessonDetailType } from '../types/lesson';
 import { transactionApi } from './interfaces/transactionApi';
 import { QrPayReqType } from '../types/transaction';
+import {
+  HostLessonDetailType,
+  HostLessonType,
+  ReservationReqType,
+} from '../types/reservation';
 
 export class ApiClient
   implements userApi, accountApi, hostApi, categoryApi, transactionApi
@@ -184,7 +189,16 @@ export class ApiClient
       method: 'get',
       url: `/lesson/${lesson_id}`,
     });
-    console.log(lesson_id);
+    return response.data;
+  }
+
+  async getLessonDate(lessonId: number) {
+    const response = await this.axiosInstance.request<
+      BaseResponseType<LessonDateType[]>
+    >({
+      method: 'get',
+      url: `/lesson/date-select?lessonId=${lessonId}`,
+    });
     return response.data;
   }
 
@@ -212,6 +226,17 @@ export class ApiClient
     });
     console.log(lesson_id);
     console.log(response);
+    return response.data;
+  }
+
+  async postLessonReservation(reqData: ReservationReqType) {
+    const response = await this.axiosInstance.request<
+      BaseResponseType<{ message: string }>
+    >({
+      method: 'post',
+      url: '/reservation/check',
+      data: reqData,
+    });
     return response.data;
   }
 

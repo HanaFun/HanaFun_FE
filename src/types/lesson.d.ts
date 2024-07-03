@@ -3,6 +3,14 @@ export type LessonType = {
   title: string;
 };
 
+export type LessonDateType = {
+  lessondateId: number;
+  date: Date;
+  startTime: Date;
+  endTime: Date;
+  quantityLeft: number;
+};
+
 interface LessonDetailType {
   lesson_id: number;
   image: string;

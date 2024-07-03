@@ -10,3 +10,10 @@ interface HostLessonDetailType {
   lessonId: number;
   title: string;
 }
+
+export type ReservationReqType = {
+  lessondateId: number;
+  applicant: number;
+  accountId: number;
+  password: string;
+};
