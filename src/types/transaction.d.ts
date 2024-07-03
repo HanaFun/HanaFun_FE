@@ -16,4 +16,8 @@ interface SimplePayReqType extends PayCommonReqType {
 
 interface PayResType {
   transactionId: number;
+};
+
+interface PaybackReqType {
+  reservationId: number;
 }

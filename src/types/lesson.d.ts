@@ -20,5 +20,5 @@ interface LessonDetailType {
   location: string;
   materials: string;
   capacity: number;
-  category_name: string;
+  categoryName: string;
 }

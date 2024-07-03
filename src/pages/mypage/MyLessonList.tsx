@@ -8,12 +8,15 @@ import moment from 'moment';
 export const MyLessonList = () => {
   const navigate = useNavigate();
 
+  // 나의 신청 클래스 출력 api 연결
   const { data: allLessons } = useQuery({
     queryKey: ['allLessons'],
     queryFn: async () => {
-      const response = await ApiClient.getMyLessonAll();
-      return response;
+      const response = await ApiClient.getInstance().getMyLessonAll();
+      console.log('신청 클래스 api 호출 : ', response.data);
+      return response.data;
     },
+    retry: 1,
   });
 
   const today = moment().format('YYYY-MM-DD');
@@ -38,7 +41,7 @@ export const MyLessonList = () => {
         </div>
         <div className='mt-5'>
           <p>수강한 클래스</p>
-          <LessonSlider data={prevLesson} show={true} option='double' />
+          <LessonSlider data={prevLesson} show={true} option='single' />
         </div>
       </div>
     </div>

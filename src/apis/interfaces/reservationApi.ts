@@ -10,4 +10,15 @@ export interface reservationApi {
       reservationId: number;
     }>
   >;
+  getMyLesson(): Promise<BaseResponseType<MyLessonType>>;
+
+  getMyLessonAll(): Promise<BaseResponseType<LessonType[]>>;
+
+  getMyLessonCalendar(): Promise<BaseResponseType<MyScheduleType[]>>;
+
+  cancelLesson(): Promise<BaseResponseType<CancelLessonReqType>>;
+
+  peopleList(
+    lessondate_id: PeopleListReqType
+  ): Promise<BaseResponseType<PeopleListType>>;
 }
