@@ -4,7 +4,6 @@ import { LuMinus, LuPlus } from 'react-icons/lu';
 import { formatDate } from '../../utils/formatDate';
 import { Button } from '../common/Button';
 import { useNavigate } from 'react-router-dom';
-import { LessonDateType } from '../../types/lesson';
 
 interface IProps {
   lessonId: number;

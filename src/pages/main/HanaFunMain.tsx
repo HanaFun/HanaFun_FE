@@ -18,7 +18,6 @@ import { QRScanner } from '../../components/molecules/QRScanner';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { ApiClient } from '../../apis/apiClient';
 import { Loading } from '../Loading';
-import { AccountType, CheckPwReqType } from '../../types/account';
 import { Account_Slider_Over3_Settings } from '../../constants/accountSliderOver3Settings';
 import { Account_Slider_Under2_Settings } from '../../constants/accountSliderUnder2Settings';
 import { IntroCard_Slider_Settings } from '../../constants/introCardSliderSettings';

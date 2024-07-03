@@ -11,9 +11,9 @@ interface HostLessonDetailType {
   title: string;
 }
 
-export type ReservationReqType = {
+interface ReservationReqType {
   lessondateId: number;
   applicant: number;
   accountId: number;
   password: string;
-};
+}

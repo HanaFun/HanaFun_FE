@@ -9,7 +9,6 @@ import { useQuery } from '@tanstack/react-query';
 import { ApiClient } from '../../apis/apiClient';
 import { Loading } from '../Loading';
 import { SortCategories, SortType } from '../../constants/sortList';
-import { SearchLessonResType } from '../../types/category';
 
 export const Lessondata = [
   {

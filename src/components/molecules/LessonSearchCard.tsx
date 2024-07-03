@@ -1,6 +1,5 @@
 import { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { SearchLessonResType } from '../../types/category';
 
 interface IProps {
   lesson: SearchLessonResType;

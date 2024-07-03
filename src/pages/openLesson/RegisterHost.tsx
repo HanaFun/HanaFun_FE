@@ -4,7 +4,6 @@ import { Button } from '../../components/common/Button';
 import { ChoiceAccount } from '../../components/organisms/ChoiceAccount';
 import { useRef, useState } from 'react';
 import { CompleteSend } from '../../components/organisms/CompleteSend';
-import { AccountType } from '../../types/account';
 
 export const RegisterHost = () => {
   const navigate = useNavigate();

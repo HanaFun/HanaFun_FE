@@ -1,5 +1,3 @@
-import { LessonDateType, LessonDetailType } from '../../types/lesson';
-
 export interface lessonApi {
   getLessonDetail(
     lesson_id: number

@@ -2,29 +2,15 @@ import axios, { AxiosInstance } from 'axios';
 import { API_BASE_URL } from './url';
 import { getCookie } from '../utils/cookie';
 import { userApi } from './interfaces/userApi';
-import { LoginType, PointType } from '../types/user';
-import { AccountType, CheckPwReqType, CheckPwResType } from '../types/account';
 import { accountApi } from './interfaces/accountApi';
 import { hostApi } from './interfaces/hostApi';
 import { categoryApi } from './interfaces/categoryApi';
-import {
-  CategoryType,
-  SearchLessonReqType,
-  SearchLessonResType,
-} from '../types/category';
 import {
   CreateHostReqType,
   CreateHostResType,
   HostInfoType,
 } from '../types/host';
-import { LessonDateType, LessonDetailType } from '../types/lesson';
 import { transactionApi } from './interfaces/transactionApi';
-import { QrPayReqType } from '../types/transaction';
-import {
-  HostLessonDetailType,
-  HostLessonType,
-  ReservationReqType,
-} from '../types/reservation';
 
 export class ApiClient
   implements userApi, accountApi, hostApi, categoryApi, transactionApi
@@ -166,12 +152,21 @@ export class ApiClient
   //---------transaction---------
   async postQrPay(reqData: QrPayReqType) {
     const response = await this.axiosInstance.request<
-      BaseResponseType<{
-        transactionId: number;
-      }>
+      BaseResponseType<PayResType>
     >({
       method: 'post',
       url: '/transaction/qr',
+      data: reqData,
+    });
+    return response.data;
+  }
+
+  async postSimplePay(reqData: SimplePayReqType) {
+    const response = await this.axiosInstance.request<
+      BaseResponseType<PayResType>
+    >({
+      method: 'post',
+      url: '/transaction/simple',
       data: reqData,
     });
     return response.data;
@@ -231,7 +226,7 @@ export class ApiClient
 
   async postLessonReservation(reqData: ReservationReqType) {
     const response = await this.axiosInstance.request<
-      BaseResponseType<{ message: string }>
+      BaseResponseType<{ reservationId: number }>
     >({
       method: 'post',
       url: '/reservation/check',

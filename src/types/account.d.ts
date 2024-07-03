@@ -1,15 +1,15 @@
-export type AccountType = {
+interface AccountType {
   accountId: number;
   accountName: string;
   accountNumber: string;
   balance: number;
-};
+}
 
-export type CheckPwReqType = {
+interface CheckPwReqType {
   accountId: number;
   password: string;
-};
+}
 
-export type CheckPwResType = {
+interface CheckPwResType {
   check: boolean;
-};
+}

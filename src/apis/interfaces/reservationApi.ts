@@ -1,9 +1,3 @@
-import {
-  HostLessonDetailType,
-  HostLessonType,
-  ReservationReqType,
-} from '../../types/reservation';
-
 export interface reservationApi {
   getHostLessonList(): Promise<BaseResponseType<HostLessonType[]>>;
 
@@ -13,7 +7,7 @@ export interface reservationApi {
 
   postLessonReservation(reqData: ReservationReqType): Promise<
     BaseResponseType<{
-      message: string;
+      reservationId: number;
     }>
   >;
 }
