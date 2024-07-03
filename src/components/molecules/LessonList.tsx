@@ -1,5 +1,5 @@
 interface LessonListProps {
-  selectedLesson: HostLessonDetailType[];
+  selectedLesson: HostLessonDetailType[] | MyScheduleType[];
   handleLessonDetail: (lesson_id: number) => void;
 }
 

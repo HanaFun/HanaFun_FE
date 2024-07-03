@@ -4,7 +4,7 @@ interface HostLessonType {
   title: string;
 }
 
-interface HostLessonDetailType {
+interface HostLessonDetailType extends MyScheduleType {
   lessondate_id: number;
   date: string;
   lesson_id: number;
@@ -19,9 +19,17 @@ interface LessonType {
   title: string;
   location: string;
   date: string;
+  categoryName: string;
 }
 
 interface MyLessonType extends LessonType {
   point: number;
   lessons: LessonType[];
+}
+
+interface MyScheduleType {
+  reservation_id: number;
+  lesson_id: number;
+  date: string;
+  title: string;
 }

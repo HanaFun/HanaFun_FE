@@ -57,7 +57,6 @@ export class ApiClient {
       method: 'get',
       url: '/reservation/my',
     });
-    console.log(response);
     return response.data;
   }
 
@@ -68,6 +67,18 @@ export class ApiClient {
     >({
       method: 'get',
       url: '/reservation/my/lessons',
+    });
+    console.log('신청클래스 싹다', response.data);
+    return response.data;
+  }
+
+  // 신청 클래스 일정
+  async getMySchedule() {
+    const response = await this.axiosInstance.request<
+      BaseResponseType<MyScheduleType[]>
+    >({
+      method: 'get',
+      url: '/reservation/my/schedule',
     });
     return response.data;
   }

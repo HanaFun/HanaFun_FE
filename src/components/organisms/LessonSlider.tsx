@@ -57,12 +57,12 @@ export const LessonSlider = ({ data, show, option }: IProps) => {
   return (
     <div className='mt-5 pb-1 overflow-x-scroll whitespace-nowrap scrollbar-hide'>
       {data?.map((myLesson, index) => (
-        <div key={myLesson.lesson_id} className='inline-block relative'>
+        <div key={index} className='inline-block relative'>
           <div className='lesson-card'>
             <LessonCard
               image={myLesson.image}
               title={myLesson.title}
-              category={myLesson.location}
+              category={myLesson.categoryName}
               date={myLesson.date}
               show={show}
               handleClick={() => handleModalOpen(index)}

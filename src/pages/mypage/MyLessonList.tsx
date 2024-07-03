@@ -8,11 +8,12 @@ import moment from 'moment';
 export const MyLessonList = () => {
   const navigate = useNavigate();
 
+  // 나의 신청 클래스 출력 api 연결
   const { data: allLessons } = useQuery({
     queryKey: ['allLessons'],
     queryFn: async () => {
-      const response = await ApiClient.getMyLessonAll();
-      return response;
+      const response = await ApiClient.getInstance().getMyLessonAll();
+      return response.data;
     },
   });
 

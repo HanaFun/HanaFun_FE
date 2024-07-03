@@ -12,19 +12,19 @@ import { ErrorPage } from '../ErrorPage';
 export const LessonCalendar = () => {
   const navigate = useNavigate();
 
-  const [selectedLesson, setSelectedLesson] = useState<LessonType[]>([]);
+  const [selectedLesson, setSelectedLesson] = useState<MyScheduleType[]>([]);
   const [selectedLessonId, setSelectedLessonId] = useState<number | null>(null);
   const [calendarData, setCalendarData] = useState<CalendarDataType[]>([]);
 
   // 나의 신청 클래스 api 호출
   const {
-    data: allLessons,
+    data: mySchedule,
     isLoading: isLoadingLessons,
     error: errorLessons,
   } = useQuery({
-    queryKey: ['allLessons'],
+    queryKey: ['mySchedule'],
     queryFn: async () => {
-      const response = await ApiClient.getInstance().getMyLessonAll();
+      const response = await ApiClient.getInstance().getMySchedule();
       return response.data;
     },
     retry: 1,
@@ -47,14 +47,14 @@ export const LessonCalendar = () => {
   });
 
   useEffect(() => {
-    if (allLessons) {
-      const formattedData = allLessons.map((lesson: LessonType) => ({
+    if (mySchedule) {
+      const formattedData = mySchedule.map((lesson: MyScheduleType) => ({
         lesson_id: lesson.lesson_id,
         date: lesson.date,
       }));
       setCalendarData(formattedData);
     }
-  }, [allLessons]);
+  }, [mySchedule]);
 
   if (isLoadingLessons || isLoadingDetail) {
     return <Loading />;
@@ -70,7 +70,7 @@ export const LessonCalendar = () => {
       <MyCalendar
         data={calendarData || []}
         setSelectedLesson={(lessons: CalendarDataType[]) => {
-          const selectedLessons = allLessons?.filter((lesson: LessonType) =>
+          const selectedLessons = mySchedule?.filter((lesson: MyScheduleType) =>
             lessons.some(
               (selectedLesson) => selectedLesson.lesson_id === lesson.lesson_id
             )
