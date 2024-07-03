@@ -12,7 +12,7 @@ import { AccountPwKeypad } from '../../components/organisms/AccountPwKeypad';
 import { Slide } from '../../components/organisms/Slide';
 import { QR } from '../../components/molecules/QR';
 import { RiQrScan2Line } from 'react-icons/ri';
-import { getCookie } from '../../utils/cookie';
+import { getCookie, setCookie } from '../../utils/cookie';
 import { useNavigate } from 'react-router-dom';
 import { QRScanner } from '../../components/molecules/QRScanner';
 import { useMutation, useQuery } from '@tanstack/react-query';
@@ -30,15 +30,12 @@ export const HanaFunMain = () => {
   const [showQr, setShowQr] = useState<boolean>(false);
   const [isScan, setIsScan] = useState(false);
   const [active, setActive] = useState<number | null>(null);
-<<<<<<< HEAD
 
   setCookie(
     'token',
     'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiLrrLjshJzsl7AiLCJ1c2VySWQiOjMsImlhdCI6MTcxOTk3MjI5OCwiZXhwIjoxNzE5OTc1ODk4fQ.bTuJbpukBWbJK36KYDdm8P23Mz-vcuYLIBGHXCSWDTs'
   );
 
-=======
->>>>>>> 8f0db01dff25535a832c63c32fdd907c01c5eb66
   const [selectedAccount, setSelectedAccount] = useState<AccountType>({
     accountId: -1,
     accountName: '',

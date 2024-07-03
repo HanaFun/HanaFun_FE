@@ -199,13 +199,13 @@ export class ApiClient
   }
 
   // 신청 클래스 일정
-  async getMySchedule() {
+  async getMySchedule(reqData: MyScheduleReqType) {
     const response = await this.axiosInstance.request<
       BaseResponseType<MyScheduleType[]>
     >({
       method: 'get',
       url: '/reservation/my/schedule',
-      //data: reqData,
+      data: reqData,
     });
     return response.data;
   }

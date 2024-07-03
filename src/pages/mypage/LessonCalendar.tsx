@@ -11,6 +11,9 @@ import { ErrorPage } from '../ErrorPage';
 
 export const LessonCalendar = () => {
   const navigate = useNavigate();
+  const currDate = new Date();
+  const currYear = Number(currDate.getFullYear());
+  const currMonth = Number(currDate.getMonth());
 
   const [selectedLesson, setSelectedLesson] = useState<MyScheduleType[]>([]);
   const [selectedLessonId, setSelectedLessonId] = useState<number | null>(null);
@@ -22,9 +25,13 @@ export const LessonCalendar = () => {
     isLoading: isLoadingLessons,
     error: errorLessons,
   } = useQuery({
-    queryKey: ['mySchedule'],
+    queryKey: ['mySchedule', currYear, currMonth],
     queryFn: async () => {
-      const response = await ApiClient.getInstance().getMySchedule();
+      const reqData = {
+        year: currYear,
+        month: currMonth,
+      };
+      const response = await ApiClient.getInstance().getMySchedule(reqData);
       return response.data;
     },
     retry: 1,
