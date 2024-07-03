@@ -5,9 +5,9 @@ interface HostLessonType {
 }
 
 interface HostLessonDetailType extends MyScheduleType {
-  lessondate_id: number;
+  lessondateId: number;
   date: string;
-  lesson_id: number;
+  lessonId: number;
   title: string;
 }
 
