@@ -4,9 +4,14 @@ export type SearchLessonReqType = {
 };
 
 export type SearchLessonResType = {
-  lesson_id: number;
+  lessonId: number;
   image: string;
   title: string;
   price: number;
-  host_name: string;
+  hostName: string;
+};
+
+export type CategoryType = {
+  categoryId: number;
+  categoryName: string;
 };

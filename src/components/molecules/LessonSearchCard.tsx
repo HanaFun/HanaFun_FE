@@ -1,16 +1,9 @@
 import { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-type LessonSearchType = {
-  lesson_id: number;
-  image: string;
-  title: string;
-  price: number;
-  host_name: string;
-};
+import { SearchLessonResType } from '../../types/category';
 
 interface IProps {
-  lesson: LessonSearchType;
+  lesson: SearchLessonResType;
 }
 
 export const LessonSearchCard: FC<IProps> = ({ lesson }) => {
@@ -19,7 +12,7 @@ export const LessonSearchCard: FC<IProps> = ({ lesson }) => {
   return (
     <div
       className='bg-white flex justify-between p-3 rounded-2xl cursor-pointer drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)]'
-      onClick={() => navigate(`/lesson/${lesson.lesson_id}`)}
+      onClick={() => navigate(`/lesson/${lesson.lessonId}`)}
     >
       <div className='w-36 h-36 rounded-xl overflow-hidden object-fill'>
         <img src={lesson.image} alt='lesson_image' className='w-full h-full' />
@@ -37,7 +30,7 @@ export const LessonSearchCard: FC<IProps> = ({ lesson }) => {
           <hr className='border-hanaSilver mb-2' />
           <p className='flex items-center gap-1 font-hanaRegular text-sm'>
             <img src='/images/logo.svg' alt='logo' className='w-7' />
-            {lesson.host_name}
+            {lesson.hostName}
           </p>
         </div>
       </div>

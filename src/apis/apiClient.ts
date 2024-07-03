@@ -7,7 +7,11 @@ import { AccountType, CheckPwReqType, CheckPwResType } from '../types/account';
 import { accountApi } from './interfaces/accountApi';
 import { hostApi } from './interfaces/hostApi';
 import { categoryApi } from './interfaces/categoryApi';
-import { SearchLessonReqType, SearchLessonResType } from '../types/category';
+import {
+  CategoryType,
+  SearchLessonReqType,
+  SearchLessonResType,
+} from '../types/category';
 import {
   CreateHostReqType,
   CreateHostResType,
@@ -77,12 +81,13 @@ export class ApiClient
   }
 
   // ------- host -------
-  async getSearchLessonAll(reqData: SearchLessonReqType) {
+  async postCreateHost(reqData: CreateHostReqType) {
     const response = await this.axiosInstance.request<
-      BaseResponseType<SearchLessonResType[]>
+      BaseResponseType<CreateHostResType>
     >({
-      method: 'get',
-      url: `/category/all?query=${reqData.query}&sort=${reqData.sort}`,
+      method: 'post',
+      url: '/host/create',
+      data: reqData,
     });
     return response.data;
   }
@@ -103,13 +108,35 @@ export class ApiClient
   }
 
   // ------- category -------
-  async postCreateHost(reqData: CreateHostReqType) {
+  async getSearchLessonAll(reqData: SearchLessonReqType) {
     const response = await this.axiosInstance.request<
-      BaseResponseType<CreateHostResType>
+      BaseResponseType<SearchLessonResType[]>
     >({
-      method: 'post',
-      url: '/host/create',
-      data: reqData,
+      method: 'get',
+      url: `/category/all?query=${reqData.query}&sort=${reqData.sort}`,
+    });
+    return response.data;
+  }
+
+  async getSearchLessonCategory(
+    categoryId: number,
+    reqData: SearchLessonReqType
+  ) {
+    const response = await this.axiosInstance.request<
+      BaseResponseType<SearchLessonResType[]>
+    >({
+      method: 'get',
+      url: `/category/${categoryId}?query=${reqData.query}&sort=${reqData.sort}`,
+    });
+    return response.data;
+  }
+
+  async getCategoryList() {
+    const response = await this.axiosInstance.request<
+      BaseResponseType<CategoryType[]>
+    >({
+      method: 'get',
+      url: '/category',
     });
     return response.data;
   }

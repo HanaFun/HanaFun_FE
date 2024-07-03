@@ -60,11 +60,7 @@ export const HanaFunMain = () => {
     staleTime: 10000,
   });
 
-  const {
-    mutate: checkPw,
-    isPending: isCheckPwPeding,
-    isSuccess: isCheckPwSuccess,
-  } = useMutation({
+  const { mutate: checkPw } = useMutation({
     mutationFn: (reqData: CheckPwReqType) => {
       const res = ApiClient.getInstance().postCheckPw(reqData);
       return res;
@@ -242,7 +238,7 @@ export const HanaFunMain = () => {
               popularLessonList.data.map((item, index) => (
                 <PopularLessonItem
                   key={index}
-                  id={item.lesson_id}
+                  id={item.lessonId}
                   img={item.image}
                   title={item.title}
                 />
