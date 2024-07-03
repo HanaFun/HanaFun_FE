@@ -4,4 +4,6 @@ export interface reservationApi {
   getHostLessonDetailList(
     lesson_id: number
   ): Promise<BaseResponseType<HostLessonDetailType[]>>;
+
+  getMyLesson(): Promise<BaseResponseType<MyLessonType>>;
 }

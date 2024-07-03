@@ -20,15 +20,16 @@ const MyPage = () => {
     return new Intl.NumberFormat('ko-KR').format(value);
   };
 
-  // data 가져오기
+  // 마이페이지 출력 api
   const { data: myLessons } = useQuery({
     queryKey: ['myLessons'],
     queryFn: async () => {
-      const response = await ApiClient.getMyLesson();
+      const response = await ApiClient.getInstance().getMyLesson();
+      console.log('응답', response);
       return response;
     },
   });
-  const lessons = myLessons?.lessons;
+  const lessons = myLessons?.data;
 
   // 하나머니 호출 api
   const {
