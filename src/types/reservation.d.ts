@@ -42,3 +42,19 @@ interface MyScheduleReqType {
   year: number;
   month: number;
 }
+
+interface PeopleType {
+  startTime: string;
+  userName: string;
+  email: string;
+}
+
+interface PeopleListType extends PeopleType {
+  applicant: number;
+  capacity: number;
+  people: PeopleType[];
+}
+
+interface PeopleListReqType {
+  lessondateId: number;
+}

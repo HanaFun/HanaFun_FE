@@ -3,7 +3,7 @@ interface Iprops {
 }
 
 export const LessonDetail = ({ lessonDetail }: Iprops) => {
-  const category = lessonDetail?.data?.category_name;
+  const category = lessonDetail?.data?.categoryName;
   const people = lessonDetail?.data?.capacity;
   const price = lessonDetail?.data?.price;
   const place = lessonDetail?.data?.location;

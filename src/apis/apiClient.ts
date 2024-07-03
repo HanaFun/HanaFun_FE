@@ -235,6 +235,20 @@ export class ApiClient
     return response.data;
   }
 
+  // 예약자 정보
+  async peopleList(lessondateId: PeopleListReqType) {
+    console.log('전달된 lessondate_id: ', lessondateId);
+    const response = await this.axiosInstance.request<
+      BaseResponseType<PeopleListType>
+    >({
+      method: 'post',
+      url: '/reservation/my/opened/people',
+      data: lessondateId,
+    });
+
+    return response.data;
+  }
+
   //---------revenue---------
 
   // 임의 데이터. 클래스 년/월 별 매출액

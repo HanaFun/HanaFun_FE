@@ -15,6 +15,7 @@ export const HostLessonCalendar = () => {
     []
   );
   const [calendarData, setCalendarData] = useState<CalendarDataType[]>([]);
+  const [applicants, setApplicants] = useState<PeopleListType | null>(null);
 
   // 개설 클래스 상세 api
   const { data: hostLessonDetail } = useQuery({
@@ -62,12 +63,33 @@ export const HostLessonCalendar = () => {
     }
   }, [lesson_id, hostLessonDetail]);
 
-  const handleLessonDetail = (lesson_id: number) => {
+  const handleLessonDetail = async (lesson_id: number) => {
     const selectedLessonDetail = hostLessonDetail?.data?.find(
       (lesson: HostLessonDetailType) => lesson.lesson_id === lesson_id
     );
+
     if (selectedLessonDetail) {
       setSelectedLesson([selectedLessonDetail]);
+      // 예약자 정보 가져오기
+      const { lessondateId } = selectedLessonDetail;
+      try {
+        console.log('Fetching applicants for lessondate_id:', lessondateId);
+        console.log;
+        const response = await ApiClient.getInstance().peopleList({
+          lessondateId: lessondateId,
+        });
+        if (response && response.data) {
+          setApplicants(response.data);
+        } else {
+          setApplicants(null);
+        }
+      } catch (error) {
+        console.error('예약자 정보를 가져오는 데 실패했습니다.', error);
+        setApplicants(null);
+      }
+    } else {
+      console.error('선택한 수업의 세부 정보를 찾을 수 없습니다.');
+      setApplicants(null);
     }
   };
 
@@ -102,7 +124,7 @@ export const HostLessonCalendar = () => {
           selectedLesson={selectedLesson}
           handleLessonDetail={handleLessonDetail}
         />
-        <ApplicantList />
+        <ApplicantList applicants={applicants} />
         <p className='font-hanaMedium text-xl mt-5 ml-1'>클래스 상세 정보</p>
         <LessonDetail lessonDetail={lessonDetail} />
       </div>
