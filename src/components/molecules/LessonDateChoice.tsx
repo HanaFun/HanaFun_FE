@@ -6,12 +6,11 @@ import { Button } from '../common/Button';
 import { useNavigate } from 'react-router-dom';
 
 interface IProps {
-  lessonId: number;
   dateList: LessonDateType[];
   price: number;
 }
 
-export const LessonDateChoice: FC<IProps> = ({ lessonId, dateList, price }) => {
+export const LessonDateChoice: FC<IProps> = ({ dateList, price }) => {
   const navigate = useNavigate();
   const [choiceDate, setChoiceDate] = useState<{
     lessondate_id: number;
@@ -145,7 +144,6 @@ export const LessonDateChoice: FC<IProps> = ({ lessonId, dateList, price }) => {
           navigate('/pay', {
             state: {
               payment: count * price,
-              lessonId: lessonId,
               lessondate_id: choiceDate?.lessondate_id || 0,
               count: count,
             },

@@ -162,14 +162,19 @@ export class ApiClient
   }
 
   async postSimplePay(reqData: SimplePayReqType) {
-    const response = await this.axiosInstance.request<
-      BaseResponseType<PayResType>
-    >({
-      method: 'post',
-      url: '/transaction/simple',
-      data: reqData,
-    });
-    return response.data;
+    try {
+      const response = await this.axiosInstance.request<
+        BaseResponseType<PayResType>
+      >({
+        method: 'post',
+        url: '/transaction/simple',
+        data: reqData,
+      });
+      return response.data;
+    } catch (error: any) {
+      if (axios.isAxiosError(error)) throw error.response?.data;
+      else throw new Error('unexpected error');
+    }
   }
 
   //---------category---------
@@ -226,7 +231,7 @@ export class ApiClient
 
   async postLessonReservation(reqData: ReservationReqType) {
     const response = await this.axiosInstance.request<
-      BaseResponseType<{ reservationId: number }>
+      BaseResponseType<{ message: string }>
     >({
       method: 'post',
       url: '/reservation/check',

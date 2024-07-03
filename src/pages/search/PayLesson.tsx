@@ -14,6 +14,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { ApiClient } from '../../apis/apiClient';
 import { getCookie } from '../../utils/cookie';
 import { Loading } from '../Loading';
+import { useModal } from '../../context/ModalContext';
 
 export const PayLesson = () => {
   const navigate = useNavigate();
@@ -26,6 +27,7 @@ export const PayLesson = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showPwModal, setShowPwModal] = useState<boolean>(false);
   const [isSend, setIsSend] = useState<boolean>(false);
+  const { openModal, closeModal } = useModal();
 
   const { isLoading: isGetAccountList, data: accountList } = useQuery({
     queryKey: [getCookie('token'), 'accountList'],
@@ -35,7 +37,7 @@ export const PayLesson = () => {
     },
   });
 
-  const { isLoading: isGetHanaMoney, data: hanaMoney } = useQuery({
+  const { data: hanaMoney } = useQuery({
     queryKey: [getCookie('token'), 'hanamoney'],
     queryFn: () => {
       const res = ApiClient.getInstance().getPoint();
@@ -50,23 +52,45 @@ export const PayLesson = () => {
       return res;
     },
     onSuccess: (data) => {
+      if (data.data?.message && account) {
+        if (!isNaN(+data.data.message)) {
+          payment({
+            withdrawId: account.accountId,
+            lessondateId: state.lessondate_id,
+            reservationId: +data.data.message,
+            payment: state.payment,
+            point:
+              hanamoneyInputRef.current && checkHanaMoney
+                ? +hanamoneyInputRef.current.value.replace(/[,]/gi, '')
+                : 0,
+          });
+        } else {
+          openModal(data.data?.message, closeModal);
+          if (data.data.message === '계좌 비밀번호가 맞지 않습니다.')
+            setShowPwModal(false);
+          else navigate(-1);
+        }
+      }
+    },
+  });
+
+  const { mutate: payment } = useMutation({
+    mutationFn: (reqData: SimplePayReqType) => {
+      const res = ApiClient.getInstance().postSimplePay(reqData);
+      return res;
+    },
+    onSuccess: (data) => {
       if (data.isSuccess) {
-        // if (data.data?.jwt && data.data.userName) {
-        // }
+        setIsSend(true);
+        setShowModal(false);
+        setShowPwModal(false);
       }
     },
     onError: (error: ErrorType) => {
-      if (!error) {
-        // setIsFalse(true);
-        // setPassword({
-        //   1: -1,
-        //   2: -1,
-        //   3: -1,
-        //   4: -1,
-        //   5: -1,
-        //   6: -1,
-        // });
-        // setCurrent(1);
+      if (!error.isSuccess) {
+        openModal('잔액이 부족합니다.', closeModal);
+        setShowPwModal(false);
+        setShowModal(false);
       }
     },
   });
@@ -103,47 +127,18 @@ export const PayLesson = () => {
     setAccount(account);
   };
 
-  const handlePayment = () => {
-    if (account) {
-      console.log('출금 계좌Id>>', account.accountId);
-      console.log('클래스 Id>>', state.lessonId);
-      console.log('클래스 일정>>', state.lessondate_id);
-      console.log('수량>>', state.count);
-      console.log('지불금액>>', state.payment);
-
-      console.log(
-        '하나머니사용금액>>',
-        hanamoneyInputRef.current && checkHanaMoney
-          ? +hanamoneyInputRef.current.value.replace(/[,]/gi, '')
-          : 0
-      );
-      setShowPwModal(true);
-    }
-  };
-
   const sendAccountPassword = (password: string) => {
-    if (
-      account &&
-      state.lessonId &&
-      state.lessondate_id &&
-      state.count &&
-      state.payment
-    ) {
+    if (account && state.lessondate_id && state.count && state.payment) {
       reservation({
         lessondateId: state.lessondate_id,
         applicant: state.count,
         accountId: account.accountId,
-        password: state.payment,
+        password: password,
       });
     }
-
-    // setShowPwModal(false);
-    // setShowModal(false);
-    // setIsSend(true);
-    console.log('비밀번호>>', password);
   };
 
-  if (isGetAccountList || isGetHanaMoney) return <Loading />;
+  if (isGetAccountList) return <Loading />;
 
   return (
     <>

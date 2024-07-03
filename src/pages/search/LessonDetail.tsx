@@ -80,7 +80,6 @@ export const LessonDetail = () => {
             하나의 일정을 선택해주세요.
           </div>
           <LessonDateChoice
-            lessonId={lesson.data.lesson_id}
             dateList={lessonDateList?.data}
             price={lesson?.data?.price}
           />
