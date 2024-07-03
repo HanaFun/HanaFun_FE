@@ -11,6 +11,13 @@ interface HostLessonDetailType extends MyScheduleType {
   title: string;
 }
 
+interface ReservationReqType {
+  lessondateId: number;
+  applicant: number;
+  accountId: number;
+  password: string;
+}
+
 interface LessonType {
   reservationId: number;
   lessondate_id: number;

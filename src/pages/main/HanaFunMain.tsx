@@ -18,7 +18,6 @@ import { QRScanner } from '../../components/molecules/QRScanner';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { ApiClient } from '../../apis/apiClient';
 import { Loading } from '../Loading';
-import { AccountType, CheckPwReqType } from '../../types/account';
 import { Account_Slider_Over3_Settings } from '../../constants/accountSliderOver3Settings';
 import { Account_Slider_Under2_Settings } from '../../constants/accountSliderUnder2Settings';
 import { IntroCard_Slider_Settings } from '../../constants/introCardSliderSettings';
@@ -66,11 +65,7 @@ export const HanaFunMain = () => {
     staleTime: 10000,
   });
 
-  const {
-    mutate: checkPw,
-    isPending: isCheckPwPeding,
-    isSuccess: isCheckPwSuccess,
-  } = useMutation({
+  const { mutate: checkPw } = useMutation({
     mutationFn: (reqData: CheckPwReqType) => {
       const res = ApiClient.getInstance().postCheckPw(reqData);
       return res;
@@ -248,7 +243,7 @@ export const HanaFunMain = () => {
               popularLessonList.data.map((item, index) => (
                 <PopularLessonItem
                   key={index}
-                  id={item.lesson_id}
+                  id={item.lessonId}
                   img={item.image}
                   title={item.title}
                 />

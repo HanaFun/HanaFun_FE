@@ -1,12 +1,17 @@
-export type SearchLessonReqType = {
+interface SearchLessonReqType {
   query: string;
   sort: string;
-};
+}
 
-export type SearchLessonResType = {
-  lesson_id: number;
+interface SearchLessonResType {
+  lessonId: number;
   image: string;
   title: string;
   price: number;
-  host_name: string;
-};
+  hostName: string;
+}
+
+interface CategoryType {
+  categoryId: number;
+  categoryName: string;
+}

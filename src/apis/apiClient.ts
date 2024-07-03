@@ -2,12 +2,9 @@ import axios, { AxiosInstance } from 'axios';
 import { API_BASE_URL } from './url';
 import { getCookie } from '../utils/cookie';
 import { userApi } from './interfaces/userApi';
-import { LoginType, PointType } from '../types/user';
-import { AccountType, CheckPwReqType, CheckPwResType } from '../types/account';
 import { accountApi } from './interfaces/accountApi';
 import { hostApi } from './interfaces/hostApi';
 import { categoryApi } from './interfaces/categoryApi';
-import { SearchLessonReqType, SearchLessonResType } from '../types/category';
 import {
   CreateHostReqType,
   CreateHostResType,
@@ -76,12 +73,13 @@ export class ApiClient
   }
 
   // ------- host -------
-  async getSearchLessonAll(reqData: SearchLessonReqType) {
+  async postCreateHost(reqData: CreateHostReqType) {
     const response = await this.axiosInstance.request<
-      BaseResponseType<SearchLessonResType[]>
+      BaseResponseType<CreateHostResType>
     >({
-      method: 'get',
-      url: `/category/all?query=${reqData.query}&sort=${reqData.sort}`,
+      method: 'post',
+      url: '/host/create',
+      data: reqData,
     });
     return response.data;
   }
@@ -102,13 +100,35 @@ export class ApiClient
   }
 
   // ------- category -------
-  async postCreateHost(reqData: CreateHostReqType) {
+  async getSearchLessonAll(reqData: SearchLessonReqType) {
     const response = await this.axiosInstance.request<
-      BaseResponseType<CreateHostResType>
+      BaseResponseType<SearchLessonResType[]>
     >({
-      method: 'post',
-      url: '/host/create',
-      data: reqData,
+      method: 'get',
+      url: `/category/all?query=${reqData.query}&sort=${reqData.sort}`,
+    });
+    return response.data;
+  }
+
+  async getSearchLessonCategory(
+    categoryId: number,
+    reqData: SearchLessonReqType
+  ) {
+    const response = await this.axiosInstance.request<
+      BaseResponseType<SearchLessonResType[]>
+    >({
+      method: 'get',
+      url: `/category/${categoryId}?query=${reqData.query}&sort=${reqData.sort}`,
+    });
+    return response.data;
+  }
+
+  async getCategoryList() {
+    const response = await this.axiosInstance.request<
+      BaseResponseType<CategoryType[]>
+    >({
+      method: 'get',
+      url: '/category',
     });
     return response.data;
   }
@@ -133,9 +153,7 @@ export class ApiClient
   //---------transaction---------
   async postQrPay(reqData: QrPayReqType) {
     const response = await this.axiosInstance.request<
-      BaseResponseType<{
-        transactionId: number;
-      }>
+      BaseResponseType<PayResType>
     >({
       method: 'post',
       url: '/transaction/qr',
@@ -144,6 +162,21 @@ export class ApiClient
     return response.data;
   }
 
+  async postSimplePay(reqData: SimplePayReqType) {
+    try {
+      const response = await this.axiosInstance.request<
+        BaseResponseType<PayResType>
+      >({
+        method: 'post',
+        url: '/transaction/simple',
+        data: reqData,
+      });
+      return response.data;
+    } catch (error: any) {
+      if (axios.isAxiosError(error)) throw error.response?.data;
+      else throw new Error('unexpected error');
+    }
+  }
   // 환불
   async postPayback(reqData: PaybackReqType) {
     const response = await this.axiosInstance.request<
@@ -170,7 +203,16 @@ export class ApiClient
       method: 'get',
       url: `/lesson/${lesson_id}`,
     });
-    console.log(lesson_id);
+    return response.data;
+  }
+
+  async getLessonDate(lessonId: number) {
+    const response = await this.axiosInstance.request<
+      BaseResponseType<LessonDateType[]>
+    >({
+      method: 'get',
+      url: `/lesson/date-select?lessonId=${lessonId}`,
+    });
     return response.data;
   }
 
@@ -245,6 +287,18 @@ export class ApiClient
     return response.data;
   }
 
+  async postLessonReservation(reqData: ReservationReqType) {
+    const response = await this.axiosInstance.request<
+      BaseResponseType<{ message: string }>
+    >({
+      method: 'post',
+      url: '/reservation/check',
+      data: reqData,
+    });
+    return response.data;
+  }
+
+  //---------revenue---------
   // 예약자 정보
   async peopleList(lessondateId: PeopleListReqType) {
     console.log('전달된 lessondate_id: ', lessondateId);

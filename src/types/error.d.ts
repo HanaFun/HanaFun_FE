@@ -1,4 +1,4 @@
-type ErrorType = {
+interface ErrorType {
   isSuccess: boolean;
   message: string;
-};
+}

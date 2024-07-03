@@ -1,7 +1,6 @@
 import { useRef, useState } from 'react';
 import { Button } from '../../components/common/Button';
 import { Topbar } from '../../components/common/Topbar';
-import { ChoiceAccount } from '../../components/organisms/ChoiceAccount';
 import { InputMoney } from '../../components/Atom/InputMoney';
 import { FaRegCheckCircle } from 'react-icons/fa';
 import { changeMoneyFormat } from '../../utils/changeMoney';
@@ -10,6 +9,12 @@ import { ModalBottomContainer } from '../../components/organisms/ModalBottomCont
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AccountPwKeypad } from '../../components/organisms/AccountPwKeypad';
 import { CompleteSend } from '../../components/organisms/CompleteSend';
+import { ChoiceAccount } from '../../components/organisms/ChoiceAccount';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { ApiClient } from '../../apis/apiClient';
+import { getCookie } from '../../utils/cookie';
+import { Loading } from '../Loading';
+import { useModal } from '../../context/ModalContext';
 
 export const PayLesson = () => {
   const navigate = useNavigate();
@@ -22,14 +27,84 @@ export const PayLesson = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showPwModal, setShowPwModal] = useState<boolean>(false);
   const [isSend, setIsSend] = useState<boolean>(false);
+  const { openModal, closeModal } = useModal();
+
+  const { isLoading: isGetAccountList, data: accountList } = useQuery({
+    queryKey: [getCookie('token'), 'accountList'],
+    queryFn: () => {
+      const res = ApiClient.getInstance().getAccountList();
+      return res;
+    },
+  });
+
+  const { data: hanaMoney } = useQuery({
+    queryKey: [getCookie('token'), 'hanamoney'],
+    queryFn: () => {
+      const res = ApiClient.getInstance().getPoint();
+      return res;
+    },
+    enabled: !!checkHanaMoney,
+  });
+
+  const { mutate: reservation } = useMutation({
+    mutationFn: (reqData: ReservationReqType) => {
+      const res = ApiClient.getInstance().postLessonReservation(reqData);
+      return res;
+    },
+    onSuccess: (data) => {
+      if (data.data?.message && account) {
+        if (!isNaN(+data.data.message)) {
+          payment({
+            withdrawId: account.accountId,
+            lessondateId: state.lessondate_id,
+            reservationId: +data.data.message,
+            payment: state.payment,
+            point:
+              hanamoneyInputRef.current && checkHanaMoney
+                ? +hanamoneyInputRef.current.value.replace(/[,]/gi, '')
+                : 0,
+          });
+        } else {
+          openModal(data.data?.message, closeModal);
+          if (data.data.message === '계좌 비밀번호가 맞지 않습니다.')
+            setShowPwModal(false);
+          else navigate(-1);
+        }
+      }
+    },
+  });
+
+  const { mutate: payment } = useMutation({
+    mutationFn: (reqData: SimplePayReqType) => {
+      const res = ApiClient.getInstance().postSimplePay(reqData);
+      return res;
+    },
+    onSuccess: (data) => {
+      if (data.isSuccess) {
+        setIsSend(true);
+        setShowModal(false);
+        setShowPwModal(false);
+      }
+    },
+    onError: (error: ErrorType) => {
+      if (!error.isSuccess) {
+        openModal('잔액이 부족합니다.', closeModal);
+        setShowPwModal(false);
+        setShowModal(false);
+      }
+    },
+  });
 
   const handleChangeHanaMoney = () => {
-    if (hanamoneyInputRef.current) {
+    if (hanamoneyInputRef.current && hanaMoney?.data) {
       hanamoneyInputRef.current.value = changeMoneyFormat(
         hanamoneyInputRef.current.value
       );
       // 하나머니 잔액으로 체크
-      if (+hanamoneyInputRef.current.value.replace(/[,]/gi, '') > 3000) {
+      if (
+        +hanamoneyInputRef.current.value.replace(/[,]/gi, '') >
+        hanaMoney?.data?.point
+      ) {
         setShowMessage(true);
         setActiveBtn(false);
         return;
@@ -52,29 +127,18 @@ export const PayLesson = () => {
     setAccount(account);
   };
 
-  const handlePayment = () => {
-    if (account) {
-      console.log('출금 계좌Id>>', account.accountId);
-      console.log('클래스 Id>>', state.lessonId);
-      console.log('클래스 일정>>', state.lessondate_id);
-      console.log('수량>>', state.count);
-      console.log('지불금액>>', state.payment);
-      console.log(
-        '하나머니사용금액>>',
-        hanamoneyInputRef.current && checkHanaMoney
-          ? +hanamoneyInputRef.current.value.replace(/[,]/gi, '')
-          : 0
-      );
-      setShowPwModal(true);
+  const sendAccountPassword = (password: string) => {
+    if (account && state.lessondate_id && state.count && state.payment) {
+      reservation({
+        lessondateId: state.lessondate_id,
+        applicant: state.count,
+        accountId: account.accountId,
+        password: password,
+      });
     }
   };
 
-  const sendAccountPassword = (password: string) => {
-    setShowPwModal(false);
-    setShowModal(false);
-    setIsSend(true);
-    console.log('비밀번호>>', password);
-  };
+  if (isGetAccountList) return <Loading />;
 
   return (
     <>
@@ -111,7 +175,7 @@ export const PayLesson = () => {
             </button>
             <button
               className='col-span-2 rounded-2xl py-4 text-xl font-hanaBold text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.25)] bg-hanaNavGreen'
-              onClick={handlePayment}
+              onClick={() => setShowPwModal(true)}
             >
               결제하기
             </button>
@@ -126,59 +190,63 @@ export const PayLesson = () => {
       )}
       <Topbar title='결제' onClick={() => navigate(-1)} />
       {!isSend ? (
-        <div className='pt-5 mb-28'>
-          <div className='mt-6'>
-            {/* <ChoiceAccount
-              accounts={userDummyData.accounts}
-              selectedAccount={selectedAccount}
-              isSelectBtn={true}
-            /> */}
-          </div>
-          <InputMoney maxMoney={state.payment} isChangeMoney={false} />
-          <div
-            className='px-5 mt-16 flex items-center gap-2 font-hanaMedium text-hanaGreen text-sm'
-            onClick={() => {
-              setCheckHanaMoney((prev) => !prev);
-              setActiveBtn(checkHanaMoney);
-            }}
-          >
-            <FaRegCheckCircle
-              size={18}
-              color={checkHanaMoney ? '#008485' : '#B5B5B5'}
-            />
-            하나머니 사용하기
-          </div>
-          {checkHanaMoney && (
-            <div className='px-5'>
-              <div className='mt-2 flex justify-between items-center bg-hanaGreen rounded-2xl px-5 py-4 font-hanaRegular text-white'>
-                <p>하나머니 잔액</p>
-                {Number(3000).toLocaleString()}
+        <>
+          {accountList?.data && (
+            <div className='pt-5 mb-28'>
+              <div className='mt-6'>
+                <ChoiceAccount
+                  accounts={accountList.data}
+                  selectedAccount={selectedAccount}
+                  isSelectBtn={true}
+                />
               </div>
-              <div className='mt-5 font-hanaMedium'>
-                <h3>사용금액</h3>
-                <div className='mt-3 flex justify-between items-center border-b-[1px] border-hanaSilver'>
-                  <input
-                    ref={hanamoneyInputRef}
-                    type='text'
-                    placeholder='금액을 입력해주세요.'
-                    onChange={handleChangeHanaMoney}
-                    className='w-[90%] placeholder:text-hanaSilver font-hanaRegular text-sm pb-1 bg-transparent focus:outline-none'
-                  />
-                  <IoCloseCircle
-                    size={20}
-                    color='#B5B5B5'
-                    onClick={handleCancleHanaMoney}
-                  />
+              <InputMoney maxMoney={state.payment} isChangeMoney={false} />
+              <div
+                className='px-5 mt-16 flex items-center gap-2 font-hanaMedium text-hanaGreen text-sm'
+                onClick={() => {
+                  setCheckHanaMoney((prev) => !prev);
+                  setActiveBtn(checkHanaMoney);
+                }}
+              >
+                <FaRegCheckCircle
+                  size={18}
+                  color={checkHanaMoney ? '#008485' : '#B5B5B5'}
+                />
+                하나머니 사용하기
+              </div>
+              {checkHanaMoney && (
+                <div className='px-5'>
+                  <div className='mt-2 flex justify-between items-center bg-hanaGreen rounded-2xl px-5 py-4 font-hanaRegular text-white'>
+                    <p>하나머니 잔액</p>
+                    {hanaMoney?.data?.point.toLocaleString()}
+                  </div>
+                  <div className='mt-5 font-hanaMedium'>
+                    <h3>사용금액</h3>
+                    <div className='mt-3 flex justify-between items-center border-b-[1px] border-hanaSilver'>
+                      <input
+                        ref={hanamoneyInputRef}
+                        type='text'
+                        placeholder='금액을 입력해주세요.'
+                        onChange={handleChangeHanaMoney}
+                        className='w-[90%] placeholder:text-hanaSilver font-hanaRegular text-sm pb-1 bg-transparent focus:outline-none'
+                      />
+                      <IoCloseCircle
+                        size={20}
+                        color='#B5B5B5'
+                        onClick={handleCancleHanaMoney}
+                      />
+                    </div>
+                    {showMessage && (
+                      <p className='mt-1 font-hanaLight text-xs text-hanaRed'>
+                        하나머니 잔액이 부족합니다.
+                      </p>
+                    )}
+                  </div>
                 </div>
-                {showMessage && (
-                  <p className='mt-1 font-hanaLight text-xs text-hanaRed'>
-                    하나머니 잔액이 부족합니다.
-                  </p>
-                )}
-              </div>
+              )}
             </div>
           )}
-        </div>
+        </>
       ) : (
         <CompleteSend title2='클래스가 신청되었습니다.' />
       )}

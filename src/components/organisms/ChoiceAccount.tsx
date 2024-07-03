@@ -1,7 +1,6 @@
 import { FC, useEffect, useState } from 'react';
 import { MdKeyboardArrowDown } from 'react-icons/md';
 import { ModalBottomContainer } from './ModalBottomContainer';
-import { AccountType } from '../../types/account';
 
 interface IProps {
   accounts: AccountType[];

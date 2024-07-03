@@ -3,22 +3,14 @@ import { AiOutlineClose } from 'react-icons/ai';
 import { LuMinus, LuPlus } from 'react-icons/lu';
 import { formatDate } from '../../utils/formatDate';
 import { Button } from '../common/Button';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 interface IProps {
-  dateList: DateListType[];
+  dateList: LessonDateType[];
   price: number;
 }
 
-type DateListType = {
-  lessondate_id: number;
-  date: string;
-  start_time: string;
-  end_time: string;
-  quantityLeft: number;
-};
 export const LessonDateChoice: FC<IProps> = ({ dateList, price }) => {
-  const { lessonId } = useParams();
   const navigate = useNavigate();
   const [choiceDate, setChoiceDate] = useState<{
     lessondate_id: number;
@@ -72,19 +64,27 @@ export const LessonDateChoice: FC<IProps> = ({ dateList, price }) => {
           </h2>{' '}
           <div className='max-h-56 overflow-y-scroll'>
             {dateList.map((date, index) => (
-              <div key={date.lessondate_id}>
+              <div key={date.lessondateId}>
                 <div
                   className='px-4 py-4 flex flex-col justify-center gap-1 cursor-pointer'
                   onClick={() =>
                     clickedChoiceDate(
-                      date.lessondate_id,
-                      formatDate(date.date, date.start_time, date.end_time),
+                      date.lessondateId,
+                      formatDate(
+                        '' + date.date,
+                        '' + date.startTime,
+                        '' + date.endTime
+                      ),
                       date.quantityLeft
                     )
                   }
                 >
                   <p className='font-hanaRegular text-sm'>
-                    {formatDate(date.date, date.start_time, date.end_time)}
+                    {formatDate(
+                      '' + date.date,
+                      '' + date.startTime,
+                      '' + date.endTime
+                    )}
                   </p>
                   <p className='flex items-end gap-1 font-hanaBold text-sm'>
                     {price.toLocaleString()}원
@@ -144,7 +144,6 @@ export const LessonDateChoice: FC<IProps> = ({ dateList, price }) => {
           navigate('/pay', {
             state: {
               payment: count * price,
-              lessonId: lessonId,
               lessondate_id: choiceDate?.lessondate_id || 0,
               count: count,
             },

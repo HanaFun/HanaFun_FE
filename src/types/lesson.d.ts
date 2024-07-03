@@ -3,6 +3,14 @@ interface LessonType {
   title: string;
 }
 
+interface LessonDateType {
+  lessondateId: number;
+  date: Date;
+  startTime: Date;
+  endTime: Date;
+  quantityLeft: number;
+}
+
 interface LessonDetailType {
   lesson_id: number;
   image: string;

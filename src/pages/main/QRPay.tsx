@@ -11,9 +11,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { ApiClient } from '../../apis/apiClient';
 import { ModalBottomContainer } from '../../components/organisms/ModalBottomContainer';
 import { useModal } from '../../context/ModalContext';
-import { LessonType } from '../../types/lesson';
 import { Loading } from '../Loading';
-import { QrPayReqType } from '../../types/transaction';
 
 export const QRPay = () => {
   const location = useLocation();
