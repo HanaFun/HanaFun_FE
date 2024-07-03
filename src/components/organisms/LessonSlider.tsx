@@ -4,6 +4,8 @@ import DropdownSingle from '../common/DropdownSingle';
 import DropdownDouble from '../common/DropdownDouble';
 import { useNavigate } from 'react-router-dom';
 import { useModal } from '../../context/ModalContext';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { ApiClient } from '../../apis/apiClient';
 
 interface IProps {
   data: Array<LessonType> | undefined;
@@ -15,6 +17,18 @@ export const LessonSlider = ({ data, show, option }: IProps) => {
   const navigate = useNavigate();
   const { openModal, closeModal } = useModal();
   const [activeCard, setActiveCard] = useState<number | null>(null);
+  // const queryClient = useQueryClient();
+
+  const cancelLessonMutation = useMutation({
+    mutationFn: (reservation_id: number) =>
+      ApiClient.getInstance().cancelLesson(reservation_id),
+    onSuccess: () => {
+      // queryClient.invalidateQueries();
+      openModal('예약이 취소되었습니다', () =>
+        navigate('/mypage/my-lesson-list')
+      );
+    },
+  });
 
   const handleModalOpen = (index: number) => {
     setActiveCard(activeCard === index ? null : index);
@@ -22,10 +36,7 @@ export const LessonSlider = ({ data, show, option }: IProps) => {
 
   const handleConfirm = (reservation_id: number) => {
     console.log(reservation_id);
-    // reservation_id 값으로 예약 취소 api 요청
-    openModal('예약이 취소되었습니다', () =>
-      navigate('/mypage/my-lesson-list')
-    );
+    cancelLessonMutation.mutate(reservation_id);
   };
 
   const handleReportConfirm = () => {

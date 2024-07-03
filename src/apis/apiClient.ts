@@ -72,6 +72,18 @@ export class ApiClient {
     return response.data;
   }
 
+  // 클래스 예약 취소
+  async cancelLesson(reservation_id: number) {
+    const response = await this.axiosInstance.request<
+      BaseResponseType<CancelLessonReqType>
+    >({
+      method: 'post',
+      url: '/reservation/cancel',
+      data: reservation_id,
+    });
+    return response.data;
+  }
+
   // 신청 클래스 일정
   async getMySchedule() {
     const response = await this.axiosInstance.request<

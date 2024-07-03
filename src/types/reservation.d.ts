@@ -33,3 +33,7 @@ interface MyScheduleType {
   date: string;
   title: string;
 }
+
+interface CancelLessonReqType {
+  reservation_id: number;
+}

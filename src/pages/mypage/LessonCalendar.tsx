@@ -44,6 +44,7 @@ export const LessonCalendar = () => {
       return response;
     },
     enabled: selectedLessonId !== null,
+    retry: 1,
   });
 
   useEffect(() => {

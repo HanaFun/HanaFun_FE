@@ -29,7 +29,6 @@ const MyPage = () => {
     queryKey: ['myLessons'],
     queryFn: async () => {
       const response = await ApiClient.getInstance().getMyLesson();
-      console.log('응답', response);
       return response;
     },
   });

@@ -10,4 +10,6 @@ export interface reservationApi {
   getMyLessonAll(): Promise<BaseResponseType<LessonType[]>>;
 
   getMyLessonCalendar(): Promise<BaseResponseType<MyScheduleType[]>>;
+
+  cancelLesson(): Promise<BaseResponseType<CancelLessonReqType>>;
 }
