@@ -17,34 +17,56 @@ export const LessonSlider = ({ data, show, option }: IProps) => {
   const navigate = useNavigate();
   const { openModal, closeModal } = useModal();
   const [activeCard, setActiveCard] = useState<number | null>(null);
-  // const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
+
+  const cancelLesson = async (reservationId: number) => {
+    console.log('여기', reservationId);
+    try {
+      const paybackResponse = await ApiClient.getInstance().postPayback({
+        reservationId: reservationId,
+      });
+
+      console.log('응답 :', paybackResponse);
+
+      if (paybackResponse.isSuccess) {
+        const cancelResponse = await ApiClient.getInstance().cancelLesson({
+          reservationId,
+        });
+
+        if (cancelResponse.isSuccess) {
+          openModal('예약이 취소되었습니다', () =>
+            navigate('/mypage/my-lesson-list')
+          );
+          queryClient.invalidateQueries();
+        } else {
+          openModal('예약 취소에 실패하였습니다', closeModal);
+        }
+      } else {
+        openModal('예약 취소에 실패하였습니다', closeModal);
+      }
+    } catch (error) {
+      openModal('예약 취소에 실패하였습니다', closeModal);
+    }
+  };
 
   const cancelLessonMutation = useMutation({
-    mutationFn: (reservation_id: number) =>
-      ApiClient.getInstance().cancelLesson(reservation_id),
-    onSuccess: () => {
-      // queryClient.invalidateQueries();
-      openModal('예약이 취소되었습니다', () =>
-        navigate('/mypage/my-lesson-list')
-      );
-    },
+    mutationFn: (reservationId: number) => cancelLesson(reservationId),
   });
 
   const handleModalOpen = (index: number) => {
     setActiveCard(activeCard === index ? null : index);
   };
 
-  const handleConfirm = (reservation_id: number) => {
-    console.log(reservation_id);
-    cancelLessonMutation.mutate(reservation_id);
+  const handleConfirm = (reservationId: number) => {
+    cancelLessonMutation.mutate(reservationId);
   };
 
   const handleReportConfirm = () => {
     openModal('신고가 접수되었습니다', closeModal);
   };
 
-  const handleDelete = (reservation_id: number) => {
-    openModal('예약을 취소하시겠습니까?', () => handleConfirm(reservation_id));
+  const handleDelete = (reservationId: number) => {
+    openModal('예약을 취소하시겠습니까?', () => handleConfirm(reservationId));
   };
 
   const handleReport = () => {
@@ -97,7 +119,7 @@ export const LessonSlider = ({ data, show, option }: IProps) => {
                   text1='예약취소'
                   text2='신고하기'
                   handleClick1={() => {
-                    handleDelete(myLesson.reservation_id);
+                    handleDelete(myLesson.reservationId);
                   }}
                   handleClick2={() => handleReport()}
                 />

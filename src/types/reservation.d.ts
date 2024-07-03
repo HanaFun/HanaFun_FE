@@ -12,7 +12,7 @@ interface HostLessonDetailType extends MyScheduleType {
 }
 
 interface LessonType {
-  reservation_id: number;
+  reservationId: number;
   lessondate_id: number;
   lesson_id: number;
   image: string;
@@ -35,7 +35,7 @@ interface MyScheduleType {
 }
 
 interface CancelLessonReqType {
-  reservation_id: number;
+  reservationId: number;
 }
 
 interface MyScheduleReqType {

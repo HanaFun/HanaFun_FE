@@ -13,9 +13,8 @@ import {
   CreateHostResType,
   HostInfoType,
 } from '../types/host';
-import { LessonDetailType } from '../types/lesson';
 import { transactionApi } from './interfaces/transactionApi';
-import { QrPayReqType } from '../types/transaction';
+import { PaybackReqType, QrPayReqType } from '../types/transaction';
 
 export class ApiClient
   implements userApi, accountApi, hostApi, categoryApi, transactionApi
@@ -145,6 +144,20 @@ export class ApiClient
     return response.data;
   }
 
+  // 환불
+  async postPayback(reqData: PaybackReqType) {
+    const response = await this.axiosInstance.request<
+      BaseResponseType<{
+        transactionId: number;
+      }>
+    >({
+      method: 'post',
+      url: '/transaction/payback',
+      data: reqData,
+    });
+    return response.data;
+  }
+
   //---------category---------
 
   //---------lesson---------
@@ -187,13 +200,11 @@ export class ApiClient
   }
 
   // 클래스 예약 취소
-  async cancelLesson(reservation_id: number) {
-    const response = await this.axiosInstance.request<
-      BaseResponseType<CancelLessonReqType>
-    >({
+  async cancelLesson(reservationId: CancelLessonReqType) {
+    const response = await this.axiosInstance.request<BaseResponseType<{}>>({
       method: 'post',
       url: '/reservation/cancel',
-      data: reservation_id,
+      data: reservationId,
     });
     return response.data;
   }
