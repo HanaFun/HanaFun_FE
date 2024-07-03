@@ -6,7 +6,7 @@ import {
 
 export interface accountApi {
   getAccountList(): Promise<BaseResponseType<AccountType[]>>;
-  getCheckPw(
+  postCheckPw(
     reqData: CheckPwReqType
   ): Promise<BaseResponseType<CheckPwResType>>;
 }

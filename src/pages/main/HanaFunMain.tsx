@@ -60,9 +60,13 @@ export const HanaFunMain = () => {
     staleTime: 10000,
   });
 
-  const { mutate: checkPw } = useMutation({
+  const {
+    mutate: checkPw,
+    isPending: isCheckPwPeding,
+    isSuccess: isCheckPwSuccess,
+  } = useMutation({
     mutationFn: (reqData: CheckPwReqType) => {
-      const res = ApiClient.getInstance().getCheckPw(reqData);
+      const res = ApiClient.getInstance().postCheckPw(reqData);
       return res;
     },
     onSuccess: (data) => {
@@ -75,7 +79,6 @@ export const HanaFunMain = () => {
   });
 
   const sendAccountPassword = (password: string) => {
-    console.log('dd>', selectedAccount.accountId, password);
     checkPw({
       accountId: selectedAccount.accountId,
       password: password,

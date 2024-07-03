@@ -65,11 +65,11 @@ export class ApiClient
     return response.data;
   }
 
-  async getCheckPw(reqData: CheckPwReqType) {
+  async postCheckPw(reqData: CheckPwReqType) {
     const response = await this.axiosInstance.request<
       BaseResponseType<CheckPwResType>
     >({
-      method: 'get',
+      method: 'post',
       url: '/account/pw',
       data: reqData,
     });

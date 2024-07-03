@@ -82,7 +82,7 @@ export const QRPay = () => {
   };
 
   useEffect(() => {
-    checkValid();
+    if (!getHostInfoLoading && !getHostInfoError) checkValid();
   }, [money, selectedLesson?.lessonId, selectedLessonDate?.lessondateId]);
 
   const {
@@ -95,6 +95,7 @@ export const QRPay = () => {
       const response = await ApiClient.getInstance().getHostInfo();
       return response;
     },
+    retry: 1,
   });
 
   const { data: hostLessonDetail } = useQuery({
