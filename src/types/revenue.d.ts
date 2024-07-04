@@ -1,0 +1,3 @@
+interface TotalType {
+  totalRevenue: number;
+}

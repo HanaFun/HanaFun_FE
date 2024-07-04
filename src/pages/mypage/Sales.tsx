@@ -12,6 +12,14 @@ export const Sales = () => {
   const year: number = date.getFullYear();
   const month: number = date.getMonth() + 1;
 
+  const { data: totalRevenue } = useQuery({
+    queryKey: ['totalRevenue'],
+    queryFn: async () => {
+      const response = await ApiClient.getInstance().getTotal();
+      return response.data;
+    },
+  });
+
   const { data: monthRevenue } = useQuery({
     queryKey: ['monthRevenue'],
     queryFn: async () => {
@@ -27,7 +35,7 @@ export const Sales = () => {
       <p className='font-hanaMedium text-xl mt-5 ml-5'>매출 관리</p>
       <div className='flex flex-col justify-center items-center'>
         <TotalSalesCard initYear={year} initMonth={month} data={monthRevenue} />
-        <TotalSales />
+        <TotalSales data={totalRevenue} />
       </div>
     </div>
   );
