@@ -87,7 +87,6 @@ export const AddLessonTimeList: FC<IProps> = ({ onChangeTimes }) => {
   const handlechangeTimes = () => {
     let datetime: LessonDateCommonType[] = [];
     inputTimeItems.map((time) => {
-      console.log(typeof time.startTime);
       if (
         time.date !== null &&
         time.startTime !== null &&
@@ -101,15 +100,12 @@ export const AddLessonTimeList: FC<IProps> = ({ onChangeTimes }) => {
             endTime: time.endTime,
           },
         ];
-        console.log('datetime>>', datetime);
       }
     });
-    console.log('cc>>', datetime);
     onChangeTimes(datetime);
   };
 
   useEffect(() => {
-    console.log('--->>', inputTimeItems);
     handlechangeTimes();
   }, [inputTimeItems]);
 
