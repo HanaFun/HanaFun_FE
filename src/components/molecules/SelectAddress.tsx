@@ -23,8 +23,8 @@ export const SelectAddress: FC<IProps> = ({ onChangeAddress }) => {
   const postCodeStyle = {
     width: '360px',
     height: '480px',
-    marginTop: '25px',
-    zIndex: '60px',
+    marginTop: '30px',
+    zIndex: '90',
   };
 
   const handleOpenAddressPopup = () => {

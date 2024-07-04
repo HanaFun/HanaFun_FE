@@ -6,9 +6,16 @@ import { accountApi } from './interfaces/accountApi';
 import { hostApi } from './interfaces/hostApi';
 import { categoryApi } from './interfaces/categoryApi';
 import { transactionApi } from './interfaces/transactionApi';
+import { reservationApi } from './interfaces/reservationApi';
 
 export class ApiClient
-  implements userApi, accountApi, hostApi, categoryApi, transactionApi
+  implements
+    userApi,
+    accountApi,
+    hostApi,
+    categoryApi,
+    transactionApi,
+    reservationApi
 {
   private static instance: ApiClient;
   private axiosInstance: AxiosInstance;
@@ -206,6 +213,15 @@ export class ApiClient
     >({
       method: 'get',
       url: `/lesson/date-select?lessonId=${lessonId}`,
+    });
+    return response.data;
+  }
+
+  async postCreateLesson(reqData: CreateLessonReqType) {
+    const response = await this.axiosInstance.request<void>({
+      method: 'post',
+      url: '/lesson/create',
+      data: reqData,
     });
     return response.data;
   }
