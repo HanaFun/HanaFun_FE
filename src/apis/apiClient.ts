@@ -44,7 +44,7 @@ export class ApiClient
       BaseResponseType<{ isHost: boolean }>
     >({
       method: 'get',
-      url: '/user/ishost',
+      url: '/user/isHost',
     });
     return response.data;
   }
