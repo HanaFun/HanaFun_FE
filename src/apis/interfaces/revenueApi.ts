@@ -5,4 +5,9 @@ export interface revenueApi {
     year: number,
     month: number
   ): Promise<BaseResponseType<MonthRevenueType[]>>;
+
+  getLessonRevenue(
+    year: number,
+    lessonId: number
+  ): Promise<BaseResponseType<LessonRevenue[]>>;
 }

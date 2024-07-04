@@ -333,12 +333,14 @@ export class ApiClient
     return response.data;
   }
 
-  // 임의 데이터. 클래스 년/월 별 매출액
-  public static async getMonthSales(): Promise<MonthSalesType[]> {
-    const apiUrl = '/data/monthRevenue.json';
-    const response = await fetch(apiUrl);
-    const data = await response.json();
-    return data;
+  async getLessonRevenue(year: number, lessonId: number) {
+    const response = await this.axiosInstance.request<
+      BaseResponseType<LessonRevenue[]>
+    >({
+      method: 'get',
+      url: `/revenue/lesson/${year}/${lessonId}`,
+    });
+    return response.data;
   }
 
   static getInstance(): ApiClient {

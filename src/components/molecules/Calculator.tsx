@@ -1,29 +1,37 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BsPencil } from 'react-icons/bs';
 import { GrFormNext, GrFormPrevious } from 'react-icons/gr';
-import Keypad from '../common/Keypad';
 import { EditPrice } from './EditPrice';
 
 const formatNumber = (value: number) => {
   return new Intl.NumberFormat('ko-KR').format(value);
 };
 
-export const Calculator = () => {
+export const Calculator = ({ data }: any) => {
   const currentMonth = new Date().getMonth() + 1;
-  const [month, setMonth] = useState(6);
-
+  const [month, setMonth] = useState(currentMonth);
   const [editPriceVisible, setEditPriceVisible] = useState(false);
-  const [keypadVisible, setKeypadVisible] = useState(false);
   const [valueSetter, setValueSetter] = useState<
     ((value: string) => void) | null
   >(null);
 
-  const [totalSales, setTotalSales] = useState(762000);
-  const [totalPrice, setTotalPrice] = useState(250000);
-  const [materialPrice, setMaterialPrice] = useState(100000);
-  const [rentalPrice, setRentalPrice] = useState(100000);
-  const [etcPrice, setEtcPrice] = useState(50000);
+  const [totalSales, setTotalSales] = useState(0);
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [materialPrice, setMaterialPrice] = useState(0);
+  const [rentalPrice, setRentalPrice] = useState(0);
+  const [etcPrice, setEtcPrice] = useState(0);
   const netProfit = totalSales - totalPrice;
+
+  useEffect(() => {
+    const currentMonthData = data.find((d: any) => d.month === month);
+    if (currentMonthData) {
+      setTotalSales(currentMonthData.totalRevenue);
+      setMaterialPrice(currentMonthData.materialPrice);
+      setRentalPrice(currentMonthData.rentalPrice);
+      setEtcPrice(currentMonthData.etcPrice);
+      setTotalPrice(currentMonthData.totalSales);
+    }
+  }, [month, data]);
 
   const handlePreviousMonth = () => {
     setMonth((prevMonth) => (prevMonth > 1 ? prevMonth - 1 : 1));
@@ -37,12 +45,10 @@ export const Calculator = () => {
 
   const openEditPrice = () => {
     setEditPriceVisible(true);
-    setKeypadVisible(true);
   };
 
   const closeEditPrice = () => {
     setEditPriceVisible(false);
-    setKeypadVisible(false);
   };
 
   const saveEditPrice = (material: string, rental: string, etc: string) => {
@@ -109,12 +115,6 @@ export const Calculator = () => {
           setValue={setValueSetter}
         />
       )}
-      {/* {keypadVisible && (
-        <Keypad
-          setValue={(value) => valueSetter && valueSetter(value)}
-          closeKeypad={() => setKeypadVisible(false)}
-        />
-      )} */}
     </div>
   );
 };

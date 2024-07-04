@@ -7,3 +7,13 @@ interface MonthRevenueType {
   title: string;
   revenue: number;
 }
+
+interface LessonRevenue {
+  month: number;
+  lessonId: number;
+  title: string;
+  revenue: number;
+  materialPrice: number;
+  rentalPrice: number;
+  etcPrice: number;
+}
