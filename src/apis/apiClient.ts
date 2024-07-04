@@ -5,11 +5,6 @@ import { userApi } from './interfaces/userApi';
 import { accountApi } from './interfaces/accountApi';
 import { hostApi } from './interfaces/hostApi';
 import { categoryApi } from './interfaces/categoryApi';
-import {
-  CreateHostReqType,
-  CreateHostResType,
-  HostInfoType,
-} from '../types/host';
 import { transactionApi } from './interfaces/transactionApi';
 
 export class ApiClient
