@@ -343,6 +343,17 @@ export class ApiClient
     return response.data;
   }
 
+  async updatePrice(reqData: PriceReqType) {
+    const response = await this.axiosInstance.request<
+      BaseResponseType<PriceType>
+    >({
+      method: 'put',
+      url: '/revenue/update',
+      data: reqData,
+    });
+    return response.data;
+  }
+
   static getInstance(): ApiClient {
     return this.instance || (this.instance = new this());
   }

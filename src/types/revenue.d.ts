@@ -17,3 +17,19 @@ interface LessonRevenue {
   rentalPrice: number;
   etcPrice: number;
 }
+
+interface PriceReqType {
+  lessonId: number;
+  year: number;
+  month: number;
+  materialPrice: number;
+  rentalPrice: number;
+  etcPrice: number;
+}
+
+interface PriceType {
+  lessonId: number;
+  materialPrice: number;
+  rentalPrice: number;
+  etcPrice: number;
+}

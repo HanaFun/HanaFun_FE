@@ -10,4 +10,6 @@ export interface revenueApi {
     year: number,
     lessonId: number
   ): Promise<BaseResponseType<LessonRevenue[]>>;
+
+  updatePrice(reqData: PriceReqType): Promise<BaseResponseType<PriceType>>;
 }

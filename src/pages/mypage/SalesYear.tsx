@@ -85,7 +85,6 @@ export const SalesYear = () => {
       { id: '순수익', data: data2 },
     ];
   }, [lessonRevenue, calculatorData]);
-  console.log(chartData);
 
   return (
     <div>
@@ -107,7 +106,11 @@ export const SalesYear = () => {
       </div>
       <p className='font-hanaMedium text-xl mt-7 mb-5 px-6'>순수익 계산기</p>
       <div className='flex justify-center items-center flex-col mb-32'>
-        <Calculator data={calculatorData} />
+        <Calculator
+          data={calculatorData}
+          lessonId={Number(lesson_id)}
+          year={Number(year)}
+        />
       </div>
     </div>
   );

@@ -2,18 +2,22 @@ import { useEffect, useState } from 'react';
 import { BsPencil } from 'react-icons/bs';
 import { GrFormNext, GrFormPrevious } from 'react-icons/gr';
 import { EditPrice } from './EditPrice';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { ApiClient } from '../../apis/apiClient';
+interface IProps {
+  data: any;
+  lessonId: number;
+  year: number;
+}
 
 const formatNumber = (value: number) => {
   return new Intl.NumberFormat('ko-KR').format(value);
 };
 
-export const Calculator = ({ data }: any) => {
+export const Calculator = ({ data, lessonId, year }: IProps) => {
   const currentMonth = new Date().getMonth() + 1;
   const [month, setMonth] = useState(currentMonth);
   const [editPriceVisible, setEditPriceVisible] = useState(false);
-  const [valueSetter, setValueSetter] = useState<
-    ((value: string) => void) | null
-  >(null);
 
   const [totalSales, setTotalSales] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
@@ -51,11 +55,41 @@ export const Calculator = ({ data }: any) => {
     setEditPriceVisible(false);
   };
 
-  const saveEditPrice = (material: string, rental: string, etc: string) => {
-    setMaterialPrice(Number(material));
-    setRentalPrice(Number(rental));
-    setEtcPrice(Number(etc));
-    setTotalPrice(Number(material) + Number(rental) + Number(etc));
+  const reqData: PriceReqType = {
+    lessonId: lessonId,
+    year: year,
+    month: month,
+    materialPrice: materialPrice,
+    rentalPrice: rentalPrice,
+    etcPrice: etcPrice,
+  };
+  const queryClient = useQueryClient();
+  const { mutate: updatePrice } = useMutation({
+    mutationFn: async () => {
+      const response = await ApiClient.getInstance().updatePrice(reqData);
+      return response;
+    },
+    onSuccess: async (response) => {
+      console.log('성공');
+      if (response.data) {
+        setMaterialPrice(response.data.materialPrice);
+        setRentalPrice(response.data.rentalPrice);
+        setEtcPrice(response.data.etcPrice);
+        setTotalPrice(
+          response.data.materialPrice +
+            response.data.rentalPrice +
+            response.data.etcPrice
+        );
+        queryClient.invalidateQueries({ queryKey: ['monthRevenue'] });
+      }
+    },
+    onError: async () => {
+      console.log('에러');
+    },
+  });
+
+  const saveEditPrice = () => {
+    updatePrice();
   };
 
   return (
@@ -112,7 +146,12 @@ export const Calculator = ({ data }: any) => {
         <EditPrice
           closeEditPrice={closeEditPrice}
           saveEditPrice={saveEditPrice}
-          setValue={setValueSetter}
+          initialMaterialPrice={materialPrice}
+          initialRentalPrice={rentalPrice}
+          initialEtcPrice={etcPrice}
+          setMaterialPrice={setMaterialPrice}
+          setRentalPrice={setRentalPrice}
+          setEtcPrice={setEtcPrice}
         />
       )}
     </div>
