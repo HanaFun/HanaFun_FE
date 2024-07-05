@@ -92,7 +92,6 @@ export const RegisterLesson = () => {
   };
 
   const onChangeLessonTime = (lessontime: LessonDateCommonType[]) => {
-    console.log('aaa>', lessonTime);
     setLessonTime(lessontime);
   };
 
