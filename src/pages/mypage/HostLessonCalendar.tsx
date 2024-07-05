@@ -4,7 +4,6 @@ import { MyCalendar } from '../../components/molecules/MyCalendar';
 import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { ApiClient } from '../../apis/apiClient';
-import { LessonList } from '../../components/molecules/LessonList';
 import { LessonDetail } from '../../components/molecules/LessonDetail';
 import { ApplicantList } from '../../components/organisms/ApplicantList';
 
