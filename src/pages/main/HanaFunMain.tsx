@@ -13,7 +13,7 @@ import { Slide } from '../../components/organisms/Slide';
 import { QR } from '../../components/molecules/QR';
 import { RiQrScan2Line } from 'react-icons/ri';
 import { getCookie } from '../../utils/cookie';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { QRScanner } from '../../components/molecules/QRScanner';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { ApiClient } from '../../apis/apiClient';
@@ -22,6 +22,7 @@ import { Account_Slider_Over3_Settings } from '../../constants/accountSliderOver
 import { Account_Slider_Under2_Settings } from '../../constants/accountSliderUnder2Settings';
 import { IntroCard_Slider_Settings } from '../../constants/introCardSliderSettings';
 import { useModal } from '../../context/ModalContext';
+import { ErrorPage } from '../ErrorPage';
 
 export const HanaFunMain = () => {
   const navigate = useNavigate();
@@ -39,7 +40,11 @@ export const HanaFunMain = () => {
   const username = getCookie('username');
   const token = getCookie('token');
 
-  const { isLoading: isGetAccountList, data: accountList } = useQuery({
+  const {
+    isLoading: isGetAccountList,
+    data: accountList,
+    isError: isGetAccountListError,
+  } = useQuery({
     queryKey: [token, 'accountList'],
     queryFn: () => {
       const res = ApiClient.getInstance().getAccountList();
@@ -47,7 +52,11 @@ export const HanaFunMain = () => {
     },
   });
 
-  const { isLoading: isGetPopularLesson, data: popularLessonList } = useQuery({
+  const {
+    isLoading: isGetPopularLesson,
+    data: popularLessonList,
+    isError: isGetPopularLessonError,
+  } = useQuery({
     queryKey: ['popularLessonList'],
     queryFn: () => {
       const res = ApiClient.getInstance().getSearchLessonAll({
@@ -113,7 +122,9 @@ export const HanaFunMain = () => {
     };
   }, [active]);
 
-  if (isGetAccountList && isGetPopularLesson) return <Loading />;
+  if (isGetAccountList || isGetPopularLesson) return <Loading />;
+
+  if (isGetAccountListError || isGetPopularLessonError) return <ErrorPage />;
 
   return (
     <>

@@ -102,19 +102,25 @@ export const QRPay = () => {
           <h3 className='font-hanaBold text-lg'>클래스를 선택해주세요.</h3>
           <div className='w-full'>
             <hr />
-            <div className='max-h-60 overflow-y-auto scrollbar-hide px-6 py-2'>
-              {hostInfo.data?.lessonList.map((lesson, idx) => (
-                <div key={idx}>
-                  <p
-                    className='py-2 font-hanaRegular text-base cursor-pointer pl-1'
-                    onClick={() => onChangeLesson(lesson)}
-                  >
-                    {lesson.title}
-                  </p>
-                  {idx + 1 !== hostInfo.data?.lessonList.length && <hr />}
-                </div>
-              ))}
-            </div>
+            {hostInfo.data.lessonList.length !== 0 ? (
+              <div className='max-h-60 overflow-y-auto scrollbar-hide px-6 py-2'>
+                {hostInfo.data?.lessonList.map((lesson, idx) => (
+                  <div key={idx}>
+                    <p
+                      className='py-2 font-hanaRegular text-base cursor-pointer pl-1'
+                      onClick={() => onChangeLesson(lesson)}
+                    >
+                      {lesson.title}
+                    </p>
+                    {idx + 1 !== hostInfo.data?.lessonList.length && <hr />}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className='font-hanaRegular min-h-20 flex justify-center items-center'>
+                클래스가 없습니다.
+              </div>
+            )}
           </div>
         </ModalBottomContainer>
       )}
