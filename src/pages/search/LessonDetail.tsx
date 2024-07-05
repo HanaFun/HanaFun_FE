@@ -165,7 +165,13 @@ export const LessonDetail = () => {
       <div className='mt-28'>
         <Button
           message={lessonDateList?.data?.length !== 0 ? '신청하기' : '예약마감'}
-          isActive={lessonDateList?.data?.length !== 0 ? true : false}
+          isActive={
+            lessonDateList?.data?.length !== 0
+              ? !lesson?.data?.hostMe
+                ? true
+                : false
+              : false
+          }
           onClick={() => setChoiceModal(true)}
         />
       </div>
