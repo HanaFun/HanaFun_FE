@@ -18,8 +18,8 @@ export const LessonDetail = ({ lessonDetail }: Iprops) => {
     <div className='mt-3 mb-32 px-5 py-3 w-[351px] h-[122px] font-hanaRegular text-xs bg-white rounded-2xl border-[1px] border-hanaSilver'>
       <div className='flex flex-row'>
         <img
-          src='/images/mypage/sample_lessoncard.png'
-          alt='lessonImg'
+          src={lessonDetail?.data?.image}
+          alt=''
           className='w-[84px] h-[84px] rounded-xl mt-2'
         />
         <div className='ml-5'>
