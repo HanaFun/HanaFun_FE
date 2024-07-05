@@ -68,7 +68,10 @@ export const PayLesson = () => {
           openModal(data.data?.message, closeModal);
           if (data.data.message === '계좌 비밀번호가 맞지 않습니다.')
             setShowPwModal(false);
-          else navigate(-1);
+          else
+            navigate(`/lesson/${state.lessonId}`, {
+              state: { prev: 'pay' },
+            });
         }
       }
     },
@@ -188,7 +191,14 @@ export const PayLesson = () => {
           onClose={() => setShowPwModal(false)}
         />
       )}
-      <Topbar title='결제' onClick={() => navigate(-1)} />
+      <Topbar
+        title='결제'
+        onClick={() =>
+          navigate(`/lesson/${state.lessonId}`, {
+            state: { prev: 'pay' },
+          })
+        }
+      />
       {!isSend ? (
         <>
           {accountList?.data && (
@@ -254,7 +264,9 @@ export const PayLesson = () => {
         message={!isSend ? '다음' : '완료'}
         isActive={!isSend ? activeBtn : true}
         onClick={() => {
-          !isSend ? setShowModal(true) : navigate('/mypage/my-lesson-list');
+          !isSend
+            ? setShowModal(true)
+            : navigate('/mypage/my-lesson-list', { replace: true });
         }}
       />
     </>

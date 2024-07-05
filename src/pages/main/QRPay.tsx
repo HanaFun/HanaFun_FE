@@ -156,7 +156,7 @@ export const QRPay = () => {
         message={!isSend ? '결제' : '완료'}
         isActive={!isSend ? isBtnActive : true}
         onClick={() => {
-          !isSend ? handleSendPayment() : navigate('/');
+          !isSend ? handleSendPayment() : navigate('/', { replace: true });
         }}
       />
     </>

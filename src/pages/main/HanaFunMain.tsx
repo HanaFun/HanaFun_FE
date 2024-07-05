@@ -13,7 +13,7 @@ import { Slide } from '../../components/organisms/Slide';
 import { QR } from '../../components/molecules/QR';
 import { RiQrScan2Line } from 'react-icons/ri';
 import { getCookie } from '../../utils/cookie';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { QRScanner } from '../../components/molecules/QRScanner';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { ApiClient } from '../../apis/apiClient';
@@ -29,7 +29,6 @@ export const HanaFunMain = () => {
   const [showQr, setShowQr] = useState<boolean>(false);
   const [isScan, setIsScan] = useState(false);
   const [active, setActive] = useState<number | null>(null);
-
   const [selectedAccount, setSelectedAccount] = useState<AccountType>({
     accountId: -1,
     accountName: '',
