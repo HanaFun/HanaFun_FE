@@ -61,6 +61,7 @@ export const LessonCalendar = () => {
     if (mySchedule) {
       const formattedData = mySchedule.map((lesson: MyScheduleType) => ({
         lesson_id: lesson.lessonId,
+        lessondateId: 0,
         date: lesson.date,
       }));
       setCalendarData(formattedData);
@@ -71,6 +72,8 @@ export const LessonCalendar = () => {
     setYear(date.getFullYear());
     setMonth(date.getMonth() + 1);
   };
+
+  const handleSelectLessondateId = (lessondateId: number) => {};
 
   if (isLoadingLessons || isLoadingDetail) {
     return <Loading />;
@@ -94,6 +97,7 @@ export const LessonCalendar = () => {
           setSelectedLesson(selectedLessons || []);
         }}
         onDateChange={handleDateChange}
+        onSelectLessondateId={handleSelectLessondateId}
       />
       <div className='m-5'>
         <p className='font-hanaMedium text-xl ml-1'>나의 일정 모아보기</p>

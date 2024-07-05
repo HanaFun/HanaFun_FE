@@ -8,12 +8,14 @@ interface IProps {
   data: CalendarDataType[] | undefined;
   setSelectedLesson: (lesson: CalendarDataType[]) => void;
   onDateChange: (date: Date) => void;
+  onSelectLessondateId: (lessondateId: number) => void; // 추가된 prop
 }
 
 export const MyCalendar = ({
   data,
   setSelectedLesson,
   onDateChange,
+  onSelectLessondateId, // 추가된 prop
 }: IProps) => {
   const [value, setValue] = useState(new Date());
   const [mark, setMark] = useState<string[]>([]);
@@ -25,7 +27,9 @@ export const MyCalendar = ({
     const formattedDate = moment(selectedDate).format('YYYY-MM-DD');
     if (data) {
       const lessons = data.filter((lesson) => lesson.date === formattedDate);
-      console.log('확인', lessons);
+      if (lessons.length > 0) {
+        onSelectLessondateId(lessons[0].lessondateId); // 선택한 날짜의 lessondateId 전달
+      }
       setSelectedLesson(lessons);
     }
   };

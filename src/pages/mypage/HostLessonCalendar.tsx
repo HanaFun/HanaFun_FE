@@ -57,52 +57,28 @@ export const HostLessonCalendar = () => {
     }
   }, [hostLessonDetail]);
 
-  // useEffect(() => {
-  //   if (lesson_id && hostLessonDetail?.data) {
-  //     const selectedLessonDetail = hostLessonDetail.data.find(
-  //       (lesson: HostLessonDetailType) => lesson.lessondateId === Number(lesson)
-  //     );
-  //     if (selectedLessonDetail) {
-  //       setSelectedLesson([selectedLessonDetail]);
-  //     }
-  //   }
-  // }, [lesson_id, hostLessonDetail]);
-
-  const handleLessonDetail = async (lesson_id: number) => {
-    console.log('확인해보자', hostLessonDetail);
-    const selectedLessonDetail = hostLessonDetail?.data?.find(
-      (lesson: HostLessonDetailType) => lesson.lessonId === lesson_id
-    );
-    console.log('여기서 확인', selectedLessonDetail);
-
-    if (selectedLessonDetail) {
-      setSelectedLesson([selectedLessonDetail]);
-      // 예약자 정보 가져오기
-      const id = selectedLessonDetail.lessondateId;
-      try {
-        console.log('Fetching applicants for lessondate_id:', id);
-        console.log;
-        const response = await ApiClient.getInstance().peopleList({
-          lessondateId: id,
-        });
-        if (response && response.data) {
-          setApplicants(response.data);
-        } else {
-          setApplicants(null);
-        }
-      } catch (error) {
-        console.error('예약자 정보를 가져오는 데 실패했습니다.', error);
+  const handleLessonDetail = async (lessondateId: number) => {
+    try {
+      console.log('Fetching applicants for lessondate_id:', lessondateId);
+      const response = await ApiClient.getInstance().peopleList({
+        lessondateId: lessondateId,
+      });
+      if (response && response.data) {
+        setApplicants(response.data);
+      } else {
         setApplicants(null);
       }
-    } else {
-      console.error('선택한 수업의 세부 정보를 찾을 수 없습니다.');
+    } catch (error) {
+      console.error('예약자 정보를 가져오는 데 실패했습니다.', error);
       setApplicants(null);
     }
   };
-
   const handleDateChange = (date: Date) => {
     setYear(date.getFullYear());
     setMonth(date.getMonth() + 1);
+  };
+  const handleSelectLessondateId = (lessondateId: number) => {
+    handleLessonDetail(lessondateId);
   };
 
   return (
@@ -123,13 +99,9 @@ export const HostLessonCalendar = () => {
           setSelectedLesson(selectedLessons || []);
         }}
         onDateChange={handleDateChange}
+        onSelectLessondateId={handleSelectLessondateId}
       />
       <div className='m-5'>
-        <p className='font-hanaMedium text-xl ml-1'>나의 일정 모아보기</p>
-        <LessonList
-          selectedLesson={selectedLesson}
-          handleLessonDetail={handleLessonDetail}
-        />
         <ApplicantList applicants={applicants} />
         <p className='font-hanaMedium text-xl mt-5 ml-1'>클래스 상세 정보</p>
         <LessonDetail lessonDetail={lessonDetail} />
