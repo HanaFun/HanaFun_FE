@@ -16,8 +16,13 @@ export const HostLessonCalendar = () => {
   );
   const [calendarData, setCalendarData] = useState<CalendarDataType[]>([]);
   const [applicants, setApplicants] = useState<PeopleListType | null>(null);
+  const currDate = new Date();
+  const currYear = Number(currDate.getFullYear());
+  const currMonth = Number(currDate.getMonth());
+  const [year, setYear] = useState(currYear);
+  const [month, setMonth] = useState(currMonth);
 
-  // 개설 클래스 상세 api
+  // 개설 클래스 일정 api
   const { data: hostLessonDetail } = useQuery({
     queryKey: ['hostLessonDetail', lesson_id],
     queryFn: async () => {
@@ -27,7 +32,6 @@ export const HostLessonCalendar = () => {
       return response;
     },
   });
-  console.log('클래스의 일정은 : ', hostLessonDetail?.data);
 
   // 클래스 상세 api
   const { data: lessonDetail } = useQuery({
@@ -44,7 +48,8 @@ export const HostLessonCalendar = () => {
     if (hostLessonDetail?.data) {
       const formattedData = hostLessonDetail.data.map(
         (lesson: HostLessonDetailType) => ({
-          lesson_id: lesson.lesson_id,
+          lesson_id: lesson.lessonId,
+          lessondateId: lesson.lessondateId,
           date: lesson.date,
         })
       );
@@ -52,31 +57,33 @@ export const HostLessonCalendar = () => {
     }
   }, [hostLessonDetail]);
 
-  useEffect(() => {
-    if (lesson_id && hostLessonDetail?.data) {
-      const selectedLessonDetail = hostLessonDetail.data.find(
-        (lesson: HostLessonDetailType) => lesson.lesson_id === Number(lesson_id)
-      );
-      if (selectedLessonDetail) {
-        setSelectedLesson([selectedLessonDetail]);
-      }
-    }
-  }, [lesson_id, hostLessonDetail]);
+  // useEffect(() => {
+  //   if (lesson_id && hostLessonDetail?.data) {
+  //     const selectedLessonDetail = hostLessonDetail.data.find(
+  //       (lesson: HostLessonDetailType) => lesson.lessondateId === Number(lesson)
+  //     );
+  //     if (selectedLessonDetail) {
+  //       setSelectedLesson([selectedLessonDetail]);
+  //     }
+  //   }
+  // }, [lesson_id, hostLessonDetail]);
 
   const handleLessonDetail = async (lesson_id: number) => {
+    console.log('확인해보자', hostLessonDetail);
     const selectedLessonDetail = hostLessonDetail?.data?.find(
-      (lesson: HostLessonDetailType) => lesson.lesson_id === lesson_id
+      (lesson: HostLessonDetailType) => lesson.lessonId === lesson_id
     );
+    console.log('여기서 확인', selectedLessonDetail);
 
     if (selectedLessonDetail) {
       setSelectedLesson([selectedLessonDetail]);
       // 예약자 정보 가져오기
-      const { lessondateId } = selectedLessonDetail;
+      const id = selectedLessonDetail.lessondateId;
       try {
-        console.log('Fetching applicants for lessondate_id:', lessondateId);
+        console.log('Fetching applicants for lessondate_id:', id);
         console.log;
         const response = await ApiClient.getInstance().peopleList({
-          lessondateId: lessondateId,
+          lessondateId: id,
         });
         if (response && response.data) {
           setApplicants(response.data);
@@ -93,19 +100,9 @@ export const HostLessonCalendar = () => {
     }
   };
 
-  const setUniqueSelectedLessons = (lessons: CalendarDataType[]) => {
-    const selectedLessons = hostLessonDetail?.data?.filter(
-      (lesson: HostLessonDetailType) =>
-        lessons.some(
-          (selectedLesson) => selectedLesson.lesson_id === lesson.lesson_id
-        )
-    );
-    // Remove duplicates by converting to a Set and then back to an array
-    const uniqueSelectedLessons = Array.from(
-      new Set(selectedLessons?.map((lesson) => lesson.lesson_id))
-    ).map((id) => selectedLessons?.find((lesson) => lesson.lesson_id === id)!);
-
-    setSelectedLesson(uniqueSelectedLessons || []);
+  const handleDateChange = (date: Date) => {
+    setYear(date.getFullYear());
+    setMonth(date.getMonth() + 1);
   };
 
   return (
@@ -116,7 +113,16 @@ export const HostLessonCalendar = () => {
       />
       <MyCalendar
         data={calendarData}
-        setSelectedLesson={setUniqueSelectedLessons}
+        setSelectedLesson={(lessons: CalendarDataType[]) => {
+          const selectedLessons = hostLessonDetail?.data?.filter(
+            (lesson: HostLessonDetailType) =>
+              lessons.some(
+                (selectedLesson) => selectedLesson.lesson_id === lesson.lessonId
+              )
+          );
+          setSelectedLesson(selectedLessons || []);
+        }}
+        onDateChange={handleDateChange}
       />
       <div className='m-5'>
         <p className='font-hanaMedium text-xl ml-1'>나의 일정 모아보기</p>
