@@ -7,8 +7,6 @@ import { hostApi } from './interfaces/hostApi';
 import { categoryApi } from './interfaces/categoryApi';
 import { transactionApi } from './interfaces/transactionApi';
 import { reservationApi } from './interfaces/reservationApi';
-import { useNavigate } from 'react-router-dom';
-import { useModal } from '../context/ModalContext';
 
 export class ApiClient
   implements
@@ -240,7 +238,6 @@ export class ApiClient
       method: 'get',
       url: '/reservation/my/lessons',
     });
-    console.log('신청클래스 싹다', response.data);
     return response.data;
   }
 
@@ -273,7 +270,7 @@ export class ApiClient
       method: 'get',
       url: '/reservation/my/opened',
     });
-    console.log(response);
+
     return response.data;
   }
 
@@ -285,8 +282,7 @@ export class ApiClient
       method: 'get',
       url: `/reservation/my/opened/${lesson_id}`,
     });
-    console.log(lesson_id);
-    console.log(response);
+
     return response.data;
   }
 
@@ -303,7 +299,6 @@ export class ApiClient
 
   // 예약자 정보
   async peopleList(lessondateId: PeopleListReqType) {
-    console.log('전달된 lessondate_id: ', lessondateId);
     const response = await this.axiosInstance.request<
       BaseResponseType<PeopleListType>
     >({
@@ -392,23 +387,25 @@ export class ApiClient
         return config;
       },
       (error) => {
-        console.log(error);
         return Promise.reject(error);
       }
     );
 
-    newInstance.interceptors.response.use((response) => {
-      if (response.status === 403) {
-        removeCookie('token');
-        removeCookie('username');
-        location.href = '/';
-      }
+    newInstance.interceptors.response.use(
+      (response) => {
+        return response;
+      },
+      (error) => {
+        if (error.response.status === 403) {
+          alert('로그아웃되었습니다.');
+          removeCookie('token');
+          removeCookie('username');
+          location.href = '/hana';
+        }
 
-      if (response.status === 404) {
-        location.href = '/error';
+        return Promise.reject(error);
       }
-      return response;
-    });
+    );
 
     return newInstance;
   };
